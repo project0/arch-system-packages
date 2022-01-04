@@ -1,0 +1,12 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+
+Type = Path
+Target = usr/share/project0-base/etc/locale.gen
+Target = etc/locale.gen
+
+[Action]
+Description = Update locale-gen
+When = PostTransaction
+Exec = /usr/bin/locale-gen

@@ -1,0 +1,54 @@
+#!/bin/bash -e
+# TPM ensures if there is configuration change it will prompt for a password
+# This script intention is to update/set the key on changes
+
+# default PCR https://wiki.archlinux.org/title/Trusted_Platform_Module#Accessing_PCR_registers
+# see also extended: https://github.com/rhboot/shim/blob/main/README.tpm
+# 0 = firmware
+# 5 = boot manager configuration and GPT table
+# 7 = Secure Boot state
+
+hook="${1-false}"
+key="/var/lib/project-cryptsetup/key"
+
+## Detect devices
+_find_dev() {
+  # df / | grep dev | cut -f 1 -d " "
+  findmnt -o SOURCE -v -n "$1"
+}
+
+if [[ ! -e /sys/class/tpm/tpm0/tpm_version_major ]]; then
+  echo "No TPM device found. Do nothing."
+  exit 0
+fi
+
+if ! mokutil --sb-state | grep -i -q 'SecureBoot enabled' ; then
+  echo "SecureBoot is not enabled. Do nothing."
+  exit 0
+fi
+
+root_dev=$(_find_dev /)
+
+if [[ "$root_dev" == /dev/mapper/* ]] && [ -f /usr/bin/cryptsetup ]; then
+  if cryptsetup status "$root_dev" | grep -q -i luks ; then
+    crypt_dev=$(cryptsetup status "$root_dev" | grep device | sed 's/ *//g' | cut -d ":" -f 2)
+
+    # check if we have existing key
+    if [[ ! -f "$key" ]]; then
+      if [[ "$hook" != 'false' ]]; then
+        echo "Please enroll first a tpm based key: $BASH_SOURCE"
+        exit 1
+      fi
+      # interactive
+      mkdir -p "$(dirname "$key")"
+      systemd-cryptenroll --recovery-key "$crypt_dev" > "$key"
+      chmod 0600 "$key"
+    fi
+
+    PASSWORD="$(<"$key")" systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+5+7 --wipe-slot=empty,tpm2  "$crypt_dev"
+    unset PASSWORD
+  fi
+else
+  echo "Root is not a luks device. Do nothing."
+  exit 0
+fi

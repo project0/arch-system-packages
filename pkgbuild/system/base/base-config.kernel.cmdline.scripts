@@ -1,0 +1,56 @@
+#!/bin/bash
+# Update kernel cmdlines
+
+## Detect devices
+_dev_uuid() {
+  blkid -o value -s UUID "$1"
+}
+_dev_partuuid() {
+  blkid -o value -s PARTUUID "$1"
+}
+_find_dev() {
+  # df / | grep dev | cut -f 1 -d " "
+  findmnt -o SOURCE -v -n "$1"
+}
+
+# discover root
+root_dev=$(_find_dev /)
+root_partuuid=$(_dev_partuuid "$root_dev")
+echo "root fs on $root_dev ($root_partuuid)"
+if [[ -n "$root_partuuid" ]]; then
+  cmdline+=("root=PARTUUID=$root_partuuid")
+else
+  cmdline+=("root=$root_dev")
+fi
+
+# discover LUKS, cryptdevice for root
+if [[ "$root_dev" == /dev/mapper/* ]] && [ -f /usr/bin/cryptsetup ]; then
+  if cryptsetup status "$root_dev" | grep -q -i luks ; then
+    crypt_dev=$(cryptsetup status "$root_dev" | grep device | sed 's/ *//g' | cut -d ":" -f 2)
+    crypt_uuid=$(_dev_uuid "$crypt_dev")
+
+    echo "root on LUKS device $crypt_dev ($crypt_uuid) detected"
+    # https://wiki.archlinux.org/title/Dm-crypt/System_configuration#Using_sd-encrypt_hook
+    cmdline+=("rd.luks.name=$crypt_uuid=root")
+  fi
+fi
+
+# get shared defaults
+for s in /etc/kernel/cmdline.preset.d/*; do
+  [[ ! -r "$s" ]] && continue
+  cmdline+=($(<"$s"))
+done
+
+# generate presets
+for p in /etc/kernel/cmdline.preset.d/*; do
+  [[ ! -d "$p" ]] && continue
+  generate="/etc/kernel/cmdline.generated/$(basename "$p")"
+  echo "generate $generate"
+
+  echo "${cmdline[*]}" > "$generate"
+  for s in "${p}"/*; do
+    [[ ! -r "$s" ]] && continue
+    cat "$s" >> "$generate"
+  done
+
+done

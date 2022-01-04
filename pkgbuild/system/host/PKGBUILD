@@ -1,0 +1,31 @@
+# Maintainer: Richard Hillmann <richie at project0 dot de>
+# inspired by https://github.com/Foxboron/PKGBUILDS/tree/master/foxboron-system
+source ../base/lib.helper
+
+pkgver="$(_pkgver)"
+pkgrel="${PKGREL-1}"
+pkgbase='project0-host'
+pkgname=(
+        "${pkgbase}-mucn1122"
+)
+pkgdesc='Project0 packager per host'
+arch=('any')
+license=('MIT')
+source=(
+    dell.*
+)
+
+# AS24 - Dell Latitude 7420
+package_project0-host-mucn1122() {
+    depends=(
+        'project0-desktop-gnome' 'project0-refind-secureboot' 'project0-cryptsetup'
+        'modemmanager'
+    )
+    printf 'MUCN1122' | install -Dm0644 /dev/stdin "${pkgdir}/etc/hostname"
+
+    # support integrated LTE modem
+    install -Dm0644 dell.modem.udev.rule "${pkgdir}/usr/lib/udev/rules.d/77-mm-${pkgname}-port-types.rules"
+    _systemd_state ModemManager.service enable
+}
+
+sha256sums=()

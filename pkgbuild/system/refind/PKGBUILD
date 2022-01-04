@@ -1,0 +1,54 @@
+# Maintainer: Richard Hillmann <richie at project0 dot de>
+source ../base/lib.helper
+
+pkgver="$(_pkgver)"
+pkgrel="${PKGREL-1}"
+pkgbase='project0-refind'
+pkgname=(
+        "${pkgbase}"
+        "${pkgbase}-secureboot"
+)
+pkgdesc='Project0 refind boot configuration'
+arch=('any')
+license=('MIT')
+source=(
+    refind.*
+)
+
+package_project0-refind() {
+    depends=(
+        'project0-base-config'
+        'efibootmgr' 'efivar'
+        'refind'
+    )
+    install -Dm0644 refind.sbat.csv "${pkgdir}/usr/share/refind/refind_x64.csv"
+    install -Dm0644 refind.conf "${pkgdir}/etc/refind.conf"
+    install -Dm0755 refind.generate.scripts "${pkgdir}/usr/bin/${pkgname}-generate"
+    install -Dm0644 refind.generate.hook "${pkgdir}/usr/share/libalpm/hooks/99-"${pkgname}"-generate.hook"
+}
+
+# https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Signing_the_kernel_with_a_pacman_hook
+# enable secureboot with refind
+package_project0-refind-secureboot() {
+    depends=(
+        'project0-base-config' 'project0-refind'
+        'tpm2-tss' 'sbsigntools' 'mokutil'
+        # AUR
+        'shim-signed'
+    )
+
+    # use refind installer capabilities to generate keys and sign refind itself
+    install -Dm0644 refind.secureboot.conf "${pkgdir}/etc/refind.d/20-${pkgname}.conf"
+
+    # hook to sign kernel
+    install -Dm0644 refind.secureboot.sign.hook "${pkgdir}/usr/share/libalpm/hooks/99-"${pkgname}"-sign.hook"
+    install -Dm0755 refind.secureboot.sign.scripts "${pkgdir}/usr/bin/${pkgname}-sign"
+}
+
+sha256sums=('ed5f0ee0ae242f7a4befa822fd07a6b8f246061ac8bc11e67a2f99f4a89693a6'
+            '2ac34a54fb1dbcbdd07b8d73d5b8ad5c661dfeb5bee156532d8d154ca9e95631'
+            'c1004451c94d89b3fb4e0d40a17b2ae786912dac77a4bdf820c170e6ded976df'
+            'eaebd4f763ed1e40f930c2829abcaab58ab7cb18203edf0529fd72d40ca349d7'
+            '210acbb0f4f82181172b03cfb89d79a68bc28ea6417031061dfe0a21d7c1dd50'
+            'b2c5c76aff69ff1ad587f389dce2ea604ed7b3ed0092f4c0d2368591cbed10e5'
+            '2c4b4fd7e26647e9501778b43b117a892cf9b43615d7a6f2df208192736df95b')

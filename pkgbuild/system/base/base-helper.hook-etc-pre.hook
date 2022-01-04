@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Remove
+
+Type = Path
+Target = usr/share/project0-base/etc/*
+
+[Action]
+Description = Ensure managed etc file target state
+When = PreTransaction
+Exec = /usr/share/libalpm/scripts/project0-base-helper-etc pre
+NeedsTargets

@@ -1,0 +1,55 @@
+#!/bin/bash
+# ensure a etc config file is preseent
+
+when="$1"
+
+_share_dir=usr/share/project0-base/etc/
+
+while read -r f; do
+
+  # strip share dir and rewrite name to target
+  file="/etc/${f/${_share_dir}}"
+  file_backup="${file}.pacorig"
+  file_new="${file}.pacnew"
+  file_save="${file}.pacsave"
+  source="/$f"
+
+  if [[ -f ${source} ]]; then
+    # install/upgrade
+
+    # ignore on pretransaction hook
+    [[ "$when" == "pre" ]] && continue
+
+    # ensure backup file exist
+    [[ ! -f "$file_backup" ]] && mv -f "$file" "$file_backup"
+
+    # replace with a softlink
+    ln -sf "$source" "$file"
+  else
+    # remove
+
+    if [[ "$when" == "pre" ]]; then
+      # ensure a proper backup file exist so the post transaction hook can handle it
+      # and we do not loose the config as it is supposed to be present by the original package
+      if [[ ! -e "$file_backup" ]]; then
+
+        restore="$source"
+        if [[ -e "$file_save" ]]; then
+          restore="$file_save"
+        elif [[ -e "$file_new" ]]; then
+          restore="$file_new"
+        fi
+
+        cp -a "$restore" "$file_backup"
+
+      fi
+      continue
+    fi
+
+    # revert to original state
+    if [[ -f "$file_backup" ]]; then
+       mv -f "$file_backup" "$file"
+    fi
+  fi
+
+done

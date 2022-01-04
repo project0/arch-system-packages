@@ -1,0 +1,119 @@
+# Maintainer: Richard Hillmann <richie at project0 dot de>
+source ../base/lib.helper
+
+pkgver="$(_pkgver)"
+pkgrel="${PKGREL-1}"
+pkgbase='project0-desktop'
+pkgname=(
+        "${pkgbase}"
+        "${pkgbase}-gnome"
+)
+pkgdesc='Project0 desktop configuration'
+arch=('any')
+license=('MIT')
+source=()
+
+package_project0-desktop() {
+    depends=(
+         'project0-base-config'
+         'project0-nerd-fonts'
+
+        # xorg/wayland
+        'wayland-utils'
+        'xorg-font-util' 'xorg-fonts-100dpi' 'xorg-fonts-75dpi' 'xorg-fonts-alias-100dpi' 'xorg-fonts-alias-75dpi' 'xorg-fonts-misc'
+        'vdpauinfo' 'libva-vdpau-driver'
+        'intel-media-driver' 'vulkan-intel' 'libva-intel-driver'
+
+        # audio
+        'pipewire-docs' 'pipewire-jack' 'wireplumber' # replaces pipewire-media-session
+        'pipewire-pulse' 'pavucontrol'
+
+        'freerdp'
+
+        # printer
+        'cups' 'system-config-printer'
+
+        'samba'
+
+        'vlc'
+
+        'firefox'
+
+        'fwupd' 'fwupd-efi' 'gnome-firmware'
+
+        'sshfs'
+        'openvpn'
+        'wireshark-cli' 'wireshark-qt'
+
+        'gopass' 'gopass-jsonapi' 'gopass-summon-provider'
+
+        'inkscape' 'gimp'
+
+        'solaar' # logitech device paring
+
+        'terminator' 'starship'
+
+        #dev tools
+        'shellcheck'
+
+        #'typescript' 'nodejs'
+
+        #AUR packages
+        'yay-bin'
+    )
+    depends+=($(pacman -Sgq base-devel))
+    depends+=($(pacman -Sgq xorg-drivers))
+
+    echo 'quiet' | \
+        install -Dm0755 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/20-${pkgname}-quiet"
+}
+
+package_project0-desktop-gnome() {
+    depends=(
+        'project0-desktop' 'project0-base-config' 'project0-base-helper'
+
+        # the default group just includes too much unwanted stuff
+        # so i choose a subset of the gnome packages
+        'gdm'
+        'gnome-shell' 'gnome-shell-extensions' 'gnome-tweaks'
+        'gnome-color-manager' 'gnome-control-center' 'gnome-session' 'gnome-settings-daemon' 'gnome-menus'
+        'gnome-keyring' 'gnome-backgrounds' 'gnome-screenshot' 'gnome-calculator'
+        'gnome-characters' 'gnome-clocks' 'gnome-disk-utility' 'gnome-system-monitor' 'gnome-terminal'
+        'gnome-font-viewer' 'gnome-remote-desktop' 'gnome-user-share' 'gnome-video-effects'
+        'gnome-bluetooth'
+        'xdg-utils' 'xdg-desktop-portal-gnome' 'xdg-user-dirs-gtk'
+        'gedit' 'baobab' 'cheese'
+        'eog' 'eog-plugins'
+        'evince' 'file-roller'
+        'grilo-plugins' 'nautilus' 'sushi' 'totem'
+        'dconf-editor'
+
+        'arc-gtk-theme'
+
+        'seahorse-nautilus'
+
+        'networkmanager' 'networkmanager-openvpn' 'networkmanager-openconnect'
+    )
+    depends+=($(pacman -Sgq gnome | grep ^gvfs))
+
+    _systemd_state gdm.service enable
+    _systemd_state NetworkManager.service enable
+    _systemd_state systemd-networkd.service disable
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

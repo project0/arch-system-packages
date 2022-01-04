@@ -1,0 +1,21 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+
+Target = linux
+Target = linux-lts
+Target = linux-hardened
+Target = linux-zen
+Target = *-ucode
+Target = mkinitcpio
+Target = mkinitcpio-*
+Target = project0-cryptsetup
+Target = project0-refind
+Target = project0-refind-*
+
+[Action]
+Description = Signing kernel with Machine Owner Key for Secure Boot
+When = PostTransaction
+Exec = /usr/bin/project0-refind-secureboot-sign
+Depends = sbsigntools

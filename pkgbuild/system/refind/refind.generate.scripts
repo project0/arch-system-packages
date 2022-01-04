@@ -1,0 +1,110 @@
+#!/bin/bash
+# Install/Update refind and generate menu entries
+set -euo pipefail
+
+# Defaults
+REFIND_LINUX_CONF_FILE="/boot/refind_linux.conf"
+REFIND_CONF_FILE="/boot/efi/EFI/refind/refind.conf"
+REFIND_OPTIONS=()
+REFIND_INSTALL=()
+REFIND_ICON="/boot/efi/EFI/refind/icons/os_arch.png"
+
+DRY=${1-false}
+
+# adjiust to proper efi partition
+for efi in '/efi' '/boot/efi' ; do
+  if [[ -d "${efi}/EFI" ]]; then
+    REFIND_CONF_FILE="${efi}/EFI/refind/refind.conf"
+  fi
+done
+
+# Load settings
+source /etc/refind.conf
+for sh in /etc/refind.d/* ; do
+	[[ ! -d ${sh} && -r ${sh} ]] && source "${sh}"
+done
+
+# ensure folder exist
+mkdir -p "$(dirname "$REFIND_CONF_FILE")"
+
+if [[ "$DRY" == 'false' ]]; then
+  # install refnd binaries and bootmanager
+
+  # if missing patch sbat section, required for shim
+  # https://github.com/rhboot/shim/issues/376#issuecomment-964137621
+  if ! objdump -h -w /usr/share/refind/refind_x64.efi | grep -q .sbat; then
+    cp -a /usr/share/refind/refind_x64.efi /usr/share/refind/refind_x64.efi.bak
+    objcopy --set-section-alignment '.sbat=512' --adjust-section-vma .sbat+10000000 \
+      --add-section .sbat=/usr/share/refind/refind_x64.csv /usr/share/refind/refind_x64.efi
+  fi
+
+  refind-install --yes ${REFIND_INSTALL[*]}
+else
+  echo "Run in dry mode"
+  REFIND_LINUX_CONF_FILE=/dev/stdout
+  REFIND_CONF_FILE=/dev/stdout
+  echo "refind-install --yes ${REFIND_INSTALL[*]}"
+fi
+
+## Detect devices
+_find_partuuid() {
+  findmnt -o PARTUUID -v -n "$1"
+}
+_find_dev() {
+  # df / | grep dev | cut -f 1 -d " "
+  findmnt -o SOURCE -v -n "$1"
+}
+
+# is boot a separate partition?
+if [[ -n "$(_find_dev /boot)" ]]; then
+  image_abs_path='\'
+  volume_uuid="$(_find_partuuid /boot)"
+else
+  image_abs_path='\boot\'
+  volume_uuid="$(_find_partuuid /)"
+fi
+
+echo "build $REFIND_LINUX_CONF_FILE"
+rm -f $REFIND_LINUX_CONF_FILE
+
+if ! compgen -G "/boot/*linu*.efi" > /dev/null ; then
+  # fallback to refind_linux.conf entries
+  cmdline=()
+
+  _initrd_entry() {
+    echo "initrd=${1/"/boot/"/"$image_abs_path"}"
+  }
+
+  # add microcodes
+  for m in /boot/*-ucode.img; do
+    [[ ! -f "$m" ]] && continue
+    cmdline+=("$(_initrd_entry "$m")");
+  done
+
+  _add_entry() {
+    local p=""
+    [[ -r "/etc/kernel/cmdline.generated/$1" ]] && p="$(<"/etc/kernel/cmdline.generated/$1" tr -s '\n' ' ') "
+    printf '"%s" "%s%s"\n' "$2" "$p" "$3" >> $REFIND_LINUX_CONF_FILE
+  }
+
+  _add_entry default  "Boot default"          "${cmdline[*]} initrd=${image_abs_path}initramfs-%v.img"
+  _add_entry terminal "Boot in terminal mode" "${cmdline[*]} initrd=${image_abs_path}initramfs-%v.img"
+  _add_entry fallback "Boot fallback"         "${cmdline[*]} initrd=${image_abs_path}initramfs-%v-fallback.img"
+else
+  # autodiscover efi files only
+  REFIND_OPTIONS+=(
+    'fold_linux_kernels=false'
+    'scan_all_linux_kernels=false'
+  )
+
+  # add icon
+  if [[ -f "$REFIND_ICON" ]]; then
+    for efi in /boot/*linu*.efi; do
+      [[ ! -f "$efi" ]] && continue
+      cp "$REFIND_ICON" "${efi/.efi/.png}"
+    done
+  fi
+fi
+
+echo "build $REFIND_CONF_FILE"
+printf '%s\n' "${REFIND_OPTIONS[@]}" > $REFIND_CONF_FILE

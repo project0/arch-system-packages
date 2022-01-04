@@ -1,0 +1,14 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+# not supported yet, what should we do on remove?
+# Operation = Remove
+
+Type = Path
+Target = usr/share/project0-base/systemd/*
+
+[Action]
+Description = Manage systemd units target state
+When = PostTransaction
+Exec = /usr/share/libalpm/scripts/project0-base-helper-systemd
+NeedsTargets

@@ -1,0 +1,20 @@
+_share_dir=usr/share/project0-base
+_share_dir_etc="${_share_dir}/etc"
+_share_dir_systemd="${_share_dir}/systemd"
+
+_systemd_state() {
+    local _unit="$1"
+    local _state="$2"
+    printf '%s' "$_state" | install -Dm0644 /dev/stdin "${pkgdir}/${_share_dir_systemd}/${_unit}"
+}
+
+_etc_file() {
+    local _source="$1"
+    local _path="$2"
+    local _mode="${3-0644}"
+    install -Dm"$_mode" "${_source}" "${pkgdir}/${_share_dir_etc}/${_path}"
+}
+
+_pkgver() {
+  printf "0.r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}

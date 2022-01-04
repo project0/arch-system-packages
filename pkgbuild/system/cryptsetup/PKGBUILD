@@ -1,0 +1,32 @@
+# Maintainer: Richard Hillmann <richie at project0 dot de>
+source ../base/lib.helper
+
+pkgver="$(_pkgver)"
+pkgrel="${PKGREL-1}"
+pkgbase='project0-cryptsetup'
+pkgname=(
+        "${pkgbase}"
+)
+pkgdesc='Project0 cryptsetup configuration'
+arch=('any')
+license=('MIT')
+source=(
+    cryptsetup.*
+)
+
+package_project0-cryptsetup() {
+    depends=('project0-base-config' 'cryptsetup' 'tpm2-tss' 'pwgen')
+    install -Dm0644 cryptsetup.mkinitcpio.conf "${pkgdir}/etc/mkinitcpio.confd/10-${pkgname}.conf"
+
+    echo 'rd.luks.options=discard' | \
+        install -Dm0755 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/40-${pkgname}"
+
+    install -Dm0755 cryptsetup.update-tpm.scripts "${pkgdir}/usr/bin/${pkgname}-update-tpm"
+    install -Dm0644 cryptsetup.update-tpm.service "${pkgdir}/usr/lib/systemd/system/${pkgname}-update-tpm.service"
+
+    _systemd_state ${pkgname}-update-tpm.service enable
+}
+
+sha256sums=('ed7681e1abd976c15178eeede532ec5a008606fc54987a9c98a98de5d4e256b7'
+            '0ff89a6185a5f238fe9a75436900379e08ac5145bbc4f185e8d70703119bd9e4'
+            '952880989c0cd448938d2f609de7087686f69e0636be41b458f210bcf449479d')

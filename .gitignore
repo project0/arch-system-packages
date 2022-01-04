@@ -1,0 +1,14 @@
+*.pkg.*
+*.db
+*.db.tar
+*.files
+*.files.tar
+
+aur/
+dist/
+
+pkg/
+src/
+
+*.zip
+*-LICENSE

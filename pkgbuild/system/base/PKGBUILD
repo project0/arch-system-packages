@@ -1,0 +1,191 @@
+# Maintainer: Richard Hillmann <richie at project0 dot de>
+source ./lib.helper
+
+pkgver="$(_pkgver)"
+pkgrel=${PKGREL-1}
+pkgbase='project0-base'
+pkgname=(
+        "${pkgbase}-helper"
+        "${pkgbase}-packages"
+        "${pkgbase}-config"
+)
+pkgdesc='Project0 base system configuration'
+arch=('any')
+license=('MIT')
+source=(
+    base-config.*
+    base-helper.*
+)
+
+package_project0-base-packages() {
+    depends=(
+        'base'
+
+        # kenerl
+        'linux' 'linux-firmware' 'amd-ucode' 'intel-ucode' 'mkinitcpio'
+
+        # core
+        'sudo' 'openssh' 'gnupg' 'man-db' 'man-pages'
+
+        # disk
+        'parted' 'gdisk'
+        'smartmontools' 'hdparm'
+        'nvme-cli'
+
+        # fs
+        'btrfs-progs' 'xfsprogs' 'e2fsprogs' 'reiserfsprogs'
+        'cifs-utils' 'nfs-utils'
+
+        # tops
+        'htop' 'iftop' 'iotop' 'iptraf-ng'
+        'sysstat' 'lm_sensors'
+
+        # networking
+        'bridge-utils'
+        'inetutils' 'traceroute' 'bind' 'net-tools' 'ethtool'
+        'nmap' 'tcpdump' 'conntrack-tools'
+        'iputils' 'ipcalc'
+        'iw' 'wpa_supplicant'
+        'wireguard-tools'
+
+        # compression
+        'p7zip' 'zip' 'unzip' 'unrar'
+
+        # Arch
+        'pacman-contrib'
+
+        # editor
+        'vim' 'nano'
+
+        # vcs
+        'git'
+
+        # shell
+        'bash' 'bash-completion'
+        'zsh' 'zsh-completions' 'zsh-syntax-highlighting'
+        'lsof' 'tree' 'rsync' 'bc'
+        'tmux' 'screen'
+
+        # utils
+        'pciutils' 'usbutils' 'psutils'
+        'testssl.sh'
+        'dos2unix'
+        'jq'
+        'strace'
+        'curl' 'wget'
+        'pwgen'
+
+        # container
+        'buildah' 'podman' 'docker'
+    )
+    depends+=($(pacman -Sgq vim-plugins))
+}
+
+package_project0-base-helper() {
+    depends=('pacman' 'systemd')
+
+    # systemd hook helper
+    install -dm0755 "${pkgdir}/${_share_dir_systemd}"
+    install -Dm0644 base-helper.hook-systemd.hook "${pkgdir}/usr/share/libalpm/hooks/99-"${pkgname}"-systemd.hook"
+    install -Dm0755 base-helper.hook-systemd.scripts "${pkgdir}/usr/share/libalpm/scripts/${pkgname}-systemd"
+
+    # pacman does not allow files being managed by multiple packages
+    # this helper ensures the config has a defined state by a foregin package
+    install -dm0755 "${pkgdir}/${_share_dir_etc}"
+    # run early so it impacts other hooks on config changes
+    install -Dm0644 base-helper.hook-etc.hook "${pkgdir}/usr/share/libalpm/hooks/00-${pkgname}-etc.hook"
+    install -Dm0644 base-helper.hook-etc-pre.hook "${pkgdir}/usr/share/libalpm/hooks/00-${pkgname}-etc-pre.hook"
+    install -Dm0755 base-helper.hook-etc.scripts "${pkgdir}/usr/share/libalpm/scripts/${pkgname}-etc"
+}
+
+package_project0-base-config() {
+    depends=(
+        'project0-base-helper' 'project0-base-packages'
+        # list explicit packages as well
+        'pacman' 'mkinitcpio' 'sudo'
+    )
+    backup=()
+
+    # sudo
+    install -dm0750 "${pkgdir}/etc/sudoers.d"
+    echo '%wheel ALL=(ALL) ALL' | install -Dm0600 /dev/stdin "${pkgdir}/etc/sudoers.d/10-${pkgname}"
+
+    _systemd_state systemd-timesyncd.service enable
+
+    # ensure stub resolver is used
+    _systemd_state systemd-resolved.service enable
+    install -dm0755 "${pkgdir}/${_share_dir_etc}"
+    ln -sf /run/systemd/resolve/stub-resolv.conf "${pkgdir}/${_share_dir_etc}/resolv.conf"
+
+    # ensure runs after etc helper hook
+    install -Dm0644 base-config.locale.gen.hook "$pkgdir"/usr/share/libalpm/hooks/01-"$pkgname"-locale-gen.hook
+    _etc_file base-config.locale.gen locale.gen
+
+    install -Dm0644 base-config.vconsole.conf "$pkgdir"/etc/vconsole.conf
+    install -Dm0644 base-config.locale.conf "$pkgdir"/etc/locale.conf
+    ln -sf /usr/share/zoneinfo/Europe/Berlin "$pkgdir"/etc/localtime
+    backup+=(etc/{locale.conf,vconsole.conf,localtime})
+
+    # bashrc
+    _etc_file base-config.bashrc bash.bashrc 0755
+
+    # pacman
+    _etc_file base-config.pacman.conf pacman.conf
+    install -Dm0644 base-config.pacman.options.conf "$pkgdir"/etc/pacman.d/10_options.conf
+    install -Dm0644 base-config.pacman.repo.conf "$pkgdir"/etc/pacman.d/20_repo.conf
+    install -Dm0644 base-config.pacman.repo-custom.conf "$pkgdir"/etc/pacman.d/50_repo-custom.conf
+    backup+=(etc/pacman.d/50_repo-custom.conf)
+
+    # mkinitcpio
+    _etc_file base-config.mkinitcpio.conf mkinitcpio.conf
+    install -dm0755 "$pkgdir"/etc/mkinitcpio.confd
+    install -Dm0644 base-config.mkinitcpio.00-base.conf "${pkgdir}/etc/mkinitcpio.confd/00-${pkgname}-base.conf"
+    install -Dm0644 base-config.mkinitcpio.20-auto.conf "${pkgdir}/etc/mkinitcpio.confd/20-${pkgname}-auto.conf"
+    install -Dm0644 base-config.mkinitcpio.99-fs.conf "${pkgdir}/etc/mkinitcpio.confd/99-${pkgname}-fs.conf"
+
+    install -Dm0644 base-config.mkinitcpio.linux.preset "${pkgdir}/etc/mkinitcpio.d/linux.preset"
+
+    ## cmdline builder
+    # As we need to compile cmdline options into efi during mkinitcpio, it need to be parsed during/before build
+    # kernel cmdline /etc/kernel/cmdline.d/
+    # How this works:
+    # cmdline.d/a_file + cmdline.d/b_file == shared default settings
+    # cmdline.d/<preset>/a_file + cmdline.d/<preset>/b_file == shared default settings (above) + the preset (like fallback) setting
+    #
+    # to avoid possible future conflicts use a more unique directory name, https://github.com/archlinux/mkinitcpio/pull/82
+    # grep -d skip conf.d/* conf.d/preset2/*
+    install -dm0755 "${pkgdir}/etc/kernel/cmdline.preset.d/"{default,fallback,terminal}
+    # generated cmdline on hook:
+    install -dm0755 "${pkgdir}/etc/kernel/cmdline.generated/"
+    # should run before mkinitcpio (90)
+    install -Dm0644 base-config.kernel.cmdline.hook "$pkgdir"/usr/share/libalpm/hooks/80-"$pkgname"-kernel-cmdline.hook
+    install -Dm0755 base-config.kernel.cmdline.scripts "${pkgdir}/usr/bin/${pkgname}-kernel-cmdline-generate"
+
+    # default options
+    echo 'ro' | \
+        install -Dm0755 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/00-${pkgname}-ro"
+    echo 'systemd.unit=multi-user.target' | \
+        install -Dm0755 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/terminal/10-${pkgname}-sd-target"
+}
+
+sha256sums=('b994d30c0be1b96dc93cea7151eba9e52af177dcb954c2c8d546a2b4fa0fbcfe'
+            'ff1ada68a598a6116d628a6278211182f308b31f3b1bf515ad4837c5548774b2'
+            '4d9d019411251c38339ee9231eb7a6483b7af675ec4f21943eeffc4843ea0e72'
+            '813cc0230b905fb9bade11a5aecee3b85d74d99ebb6242fff81ac5d83f1c8309'
+            'de8254d1f27f165d2c59ecb6e706b57b2197b9b0a22e14ba5ea960e123082116'
+            'fb63bc6b727af1d17d082af27978f20dedc52224f62ee181d6da9e57eb7c3c6c'
+            '2177fb4b9258dabebbd9bcf02279a3a638e9ec781ece48077e4545e2f522f0e6'
+            '570272450a98283a783662b0300b46a899d7f28bbf728ffaa41cb99c00eb5858'
+            '5d735804b1938f0e26d3a8a6a1f0c45ac473a8e935718e2ce58cac5f92015ed4'
+            '8a61578dd2a1b07a776d06d2da8693ba7b96b2f1f4556d05a76612ea6a0d0809'
+            'dbd28b0673600fc4483f26b7802ed2951140c175ba317fa1b4ec4319a56f2fc1'
+            'bd58fc9ec3aa2c4fc4a0b2e635131f79749e1071ea98d71ba7470b0aa8152dc6'
+            'd93aaaed61dac0568f510d5f967c4b9e9444c7cc317b364f2859990f0c327e3f'
+            'a503cd5d91232967a564b70e6c30222af8bf8c7e42de476cf0753f902193d0ae'
+            '306b26e7a9854ded11056efb70e13379b2663db697b9bdd97239fee07487833b'
+            'aee5773d632917370bf971cba1fd24cb2f4ade5d2ada72d27953b76affdbcdd8'
+            'c2d53ab702c0c70a8ce1609a18aedc8d4e1002fa9e3d4c1aea1f73c9bf4d0945'
+            '8ed73f3792f369e87ac45265a82c23aba86ae9d25054f85e2ab84f6229110570'
+            'e64a55076c8b5c25e703eebbf52d9dfda9be7a3cc68103d042f2392f3337cd56'
+            '0ad1538d30a203d3fe7df1bd6a86d7d0730140a41d640b796fb45cf81f54d3cc'
+            'fd0d738a455cae972ce3a424363d3a9c093af2b797de0525afa50dcefbadf690')

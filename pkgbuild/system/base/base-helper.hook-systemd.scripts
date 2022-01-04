@@ -1,0 +1,27 @@
+#!/bin/bash
+# ensure a systemd unit has a defined state
+while read -r f; do
+  if [[ -f ${f} ]]; then
+
+    unit="$(basename "${f}")"
+
+    case $(cat "$f") in
+      enable)
+        systemctl unmask "$unit"
+        systemctl enable --now "$unit"
+      ;;
+      disable)
+        systemctl disable --now "$unit"
+      ;;
+      mask)
+        # ensure its stopped before masking
+        systemctl disable --now "$unit"
+        systemctl mask "$unit"
+      ;;
+      unmask)
+        systemctl unmask "$unit"
+      ;;
+    esac
+
+  fi
+done

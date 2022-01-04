@@ -1,0 +1,22 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+
+Type = Package
+Target = linux
+Target = linux-lts
+Target = linux-hardened
+Target = linux-zen
+Target = *-ucode
+Target = mkinitcpio
+Target = mkinitcpio-*
+Target = refind
+Target = shim-signed
+Target = project0-cryptsetup
+Target = project0-refind
+
+[Action]
+Description = Update and install bootloader
+When = PostTransaction
+Exec = /usr/bin/project0-refind-generate
+Depends = refind

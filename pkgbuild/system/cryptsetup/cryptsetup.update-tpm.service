@@ -1,0 +1,11 @@
+[Unit]
+Description=Update systemd-cryptenroll tpm key for root device
+Wants=cryptsetup.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStop=/usr/bin/project0-cryptsetup-update-tpm
+
+[Install]
+WantedBy=multi-user.target

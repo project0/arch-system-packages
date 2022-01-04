@@ -1,0 +1,24 @@
+#!/bin/bash
+# Sign boot images
+
+sign_cert=/etc/refind.d/keys/refind_local.crt
+sign_key=/etc/refind.d/keys/refind_local.key
+
+_fatal() {
+  echo "$1"
+  exit 1
+}
+
+[[ ! -f "$sign_key" || ! -f "$sign_cert" ]] && echo "Abort, signing keys are not present ($sign_cert,$sign_key)"
+
+# only sign efistub files, ignore /boot/vmlinuz-*
+# We can only ensure a secure boot as long nobody can inject "malicious" cmdline params or initramfs
+for f in /boot/*.efi; do
+  if [[ -f "$f" ]]; then
+    # not signed yet or outdated
+    if ! /usr/bin/sbverify --cert "$sign_cert" "$f" > /dev/null 2>&1; then
+      echo "Signing $f"
+      /usr/bin/sbsign --key "$sign_key" --cert "$sign_cert" "$f" --output "$f"
+    fi
+  fi
+done
