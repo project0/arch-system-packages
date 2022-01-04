@@ -2,26 +2,17 @@ export PKGDEST := $(PWD)/dist
 export PKGEXT  := .pkg.tar.zst
 export PKGREL  := 1
 
-AUR_DIR = $(PWD)/aur
+AUR_DIR = $(PWD)/pkgbuild/aur
 
 .PHONY: all clean update-integrity update-db/*
 all: system packages aur
 clean:
 	rm -Rf $(PKGDEST) $(AUR_DIR)
-
-update-db/%: $(PKGDEST)
-	repo-add $(PKGDEST)/project0-$(subst update-db/,,$@)/project0-$(subst update-db/,,$@).db.tar \
-		$(PKGDEST)/project0-$(subst update-db/,,$@)/*$(PKGEXT)
-
-$(PKGDEST)/% :
-	mkdir -p $@
-$(AUR_DIR):
-	mkdir -p $(AUR_DIR)
-
 # build all packages
-.PHONY: pkgbuild/packages/* pkgbuild/system/* package system
-packages: pkgbuild/packages/* update-db/packages
-system: pkgbuild/system/* update-db/system
+.PHONY: 	pkgbuild/packages/* pkgbuild/system/* package system aur
+packages:	pkgbuild/packages/* update-db/packages
+system: 	pkgbuild/system/* 	update-db/system
+aur: 		pkgbuild/aur/shim-signed pkgbuild/aur/yay-bin update-db/aur
 
 # per package target
 pkgbuild/system/* : |  $(PKGDEST)/project0-system
@@ -33,11 +24,17 @@ pkgbuild/packages/* : | $(PKGDEST)/project0-packages
 	(cd $@ && PKGDEST=$(PKGDEST)/project0-packages makepkg -s -f)
 
 # build some dependent aur packages
-.PHONY: aur
-aur: aur/shim-signed aur/yay-bin update-db/aur
-aur/% : | $(AUR_DIR) $(PKGDEST)/project0-aur
-	git clone https://aur.archlinux.org/$(subst aur/,,$@).git $@
+pkgbuild/aur/% : | $(PKGDEST)/project0-aur
+	git clone https://aur.archlinux.org/$(subst pkgbuild/aur/,,$@).git $@
 	(cd $@ && PKGDEST=$(PKGDEST)/project0-aur makepkg -s)
+
+update-db/%:
+	repo-add $(PKGDEST)/project0-$(subst update-db/,,$@)/project0-$(subst update-db/,,$@).db.tar \
+		$(PKGDEST)/project0-$(subst update-db/,,$@)/*$(PKGEXT)
+
+.PRECIOUS: $(PKGDEST)/%
+$(PKGDEST)/% :
+	mkdir -p $@
 
 # run a lcaol repo
 .PHONY: run-local

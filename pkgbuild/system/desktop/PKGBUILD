@@ -100,20 +100,3 @@ package_project0-desktop-gnome() {
     _systemd_state NetworkManager.service enable
     _systemd_state systemd-networkd.service disable
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -28,4 +28,4 @@ package_project0-host-mucn1122() {
     _systemd_state ModemManager.service enable
 }
 
-sha256sums=()
+md5sums=('55a119b1319b028a47b50ea161c93ab0')

@@ -4,11 +4,11 @@
 *.files
 *.files.tar
 
-aur/
 dist/
 
 pkg/
 src/
+pkgbuild/aur/
 
 *.zip
 *-LICENSE
