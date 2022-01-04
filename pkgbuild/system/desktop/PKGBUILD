@@ -6,6 +6,7 @@ pkgrel="${PKGREL-1}"
 pkgbase='project0-desktop'
 pkgname=(
         "${pkgbase}"
+        "${pkgbase}-aur"
         "${pkgbase}-gnome"
 )
 pkgdesc='Project0 desktop configuration'
@@ -47,7 +48,7 @@ package_project0-desktop() {
 
         'gopass' 'gopass-jsonapi' 'gopass-summon-provider'
 
-        'inkscape' 'gimp'
+        'inkscape' 'gimp' 'krita'
 
         'solaar' # logitech device paring
 
@@ -55,17 +56,42 @@ package_project0-desktop() {
 
         #dev tools
         'shellcheck'
-
-        #'typescript' 'nodejs'
+        'go' 'go-tools'
 
         #AUR packages
         'yay-bin'
+
+        'kubectl'
+        'virtualbox' 'virtualbox-host-dkms' 'vagrant'
     )
     depends+=($(pacman -Sgq base-devel))
     depends+=($(pacman -Sgq xorg-drivers))
 
     echo 'quiet' | \
         install -Dm0755 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/20-${pkgname}-quiet"
+}
+
+
+# extra packages, can only be installed with yay or additional repo to resolve aur package
+package_project0-desktop-aur() {
+    depends=(
+        # aur packages
+        'adr-tools'
+        'spotify'
+        'zoom' 'slack-desktop'
+        'visual-studio-code-bin'
+        'golangci-lint-bin'
+        'aws-cli-v2-bin' 'aws-session-manager-plugin' 'awsvpnclient'
+        'postman-bin' 'yay-bin'
+        'remarshal'
+
+        # 'notable' 'joplin-appimage'
+        # 'pencil-bin'
+        # 'drawio-desktop-bin'
+
+        # theming
+        'sweet-gtk-theme' 'beautyline'
+    )
 }
 
 package_project0-desktop-gnome() {
@@ -81,6 +107,7 @@ package_project0-desktop-gnome() {
         'gnome-characters' 'gnome-clocks' 'gnome-disk-utility' 'gnome-system-monitor' 'gnome-terminal'
         'gnome-font-viewer' 'gnome-remote-desktop' 'gnome-user-share' 'gnome-video-effects'
         'gnome-bluetooth'
+        'arc-gtk-theme'
         'xdg-utils' 'xdg-desktop-portal-gnome' 'xdg-user-dirs-gtk'
         'gedit' 'baobab' 'cheese'
         'eog' 'eog-plugins'
@@ -99,4 +126,8 @@ package_project0-desktop-gnome() {
     _systemd_state gdm.service enable
     _systemd_state NetworkManager.service enable
     _systemd_state systemd-networkd.service disable
+    _systemd_state bluetooth.service enable
 }
+
+
+

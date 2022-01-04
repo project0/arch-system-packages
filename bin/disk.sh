@@ -18,7 +18,7 @@ _fatal() {
 # In case of emergency we may want to know the old layout...
 sfdisk -l
 backup_table="/root/sfdisk.$(date +%s)"
-sfdisk --backup -d "$DEVICE" > "${backup_table}.dump"
+sfdisk --backup -d "$DEVICE" > "${backup_table}.dump" || echo "No parition table found, no backup generated"
 
 echo "Partition layout can be restored with, see also man sfdisk:"
 echo "sfdisk -f '$DEVICE' < $backup_table.dump"

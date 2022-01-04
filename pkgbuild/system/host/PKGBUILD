@@ -21,11 +21,11 @@ package_project0-host-mucn1122() {
         'project0-desktop-gnome' 'project0-refind-secureboot' 'project0-cryptsetup'
         'modemmanager'
     )
-    printf 'MUCN1122' | install -Dm0644 /dev/stdin "${pkgdir}/etc/hostname"
+    printf 'mucn1122' | install -Dm0644 /dev/stdin "${pkgdir}/etc/hostname"
 
     # support integrated LTE modem
     install -Dm0644 dell.modem.udev.rule "${pkgdir}/usr/lib/udev/rules.d/77-mm-${pkgname}-port-types.rules"
     _systemd_state ModemManager.service enable
 }
 
-md5sums=('55a119b1319b028a47b50ea161c93ab0')
+sha256sums=('5b0dd576978af2318f1edb362554a67eb3ecb2a0f2177e3cbd52d65e79cfef4b')

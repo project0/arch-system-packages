@@ -46,7 +46,7 @@ run-local:
 	@echo curl "http://$(ip):8888/bin/disk.sh" -o /tmp/disk.sh
 	@echo chmod +x /tmp/install.sh  /tmp/disk.sh
 	@echo
-	@echo /tmp/disk.sh /dev/
+	@echo /tmp/disk.sh /dev/ <true:encrypt>
 	@echo /tmp/install.sh \'http://$(ip):8888/dist/\$$repo\'
 	@echo
 	python3 -m http.server -b 0.0.0.0 8888

@@ -6,10 +6,12 @@
 # see also extended: https://github.com/rhboot/shim/blob/main/README.tpm
 # 0 = firmware
 # 5 = boot manager configuration and GPT table
-# 7 = Secure Boot state
-
+# 7 = Secure Boot + shim state
+# We definetely do not want to boot the system if a new key has been rolled out:
+# 14 = shim: MokList, MokListX, and MokSBState will be extended into PCR14 if they are set.
 hook="${1-false}"
 key="/var/lib/project-cryptsetup/key"
+pcrs="0+5+7+14"
 
 ## Detect devices
 _find_dev() {
@@ -45,7 +47,7 @@ if [[ "$root_dev" == /dev/mapper/* ]] && [ -f /usr/bin/cryptsetup ]; then
       chmod 0600 "$key"
     fi
 
-    PASSWORD="$(<"$key")" systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+5+7 --wipe-slot=empty,tpm2  "$crypt_dev"
+    PASSWORD="$(<"$key")" systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs="$pcrs" --wipe-slot=empty,tpm2  "$crypt_dev"
     unset PASSWORD
   fi
 else
