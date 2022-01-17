@@ -17,16 +17,16 @@ aur: 		pkgbuild/aur/shim-signed pkgbuild/aur/yay-bin update-db/aur
 # per package target
 pkgbuild/system/* : |  $(PKGDEST)/project0-system
 	updpkgsums $@/PKGBUILD
-	(cd $@ && PKGDEST=$(PKGDEST)/project0-system makepkg -s -f)
+	(cd $@ && PKGDEST=$(PKGDEST)/project0-system makepkg -s -f --cleanbuild)
 
 pkgbuild/packages/* : | $(PKGDEST)/project0-packages
 	updpkgsums $@/PKGBUILD
-	(cd $@ && PKGDEST=$(PKGDEST)/project0-packages makepkg -s -f)
+	(cd $@ && PKGDEST=$(PKGDEST)/project0-packages makepkg -s -f --cleanbuild)
 
 # build some dependent aur packages
 pkgbuild/aur/% : | $(PKGDEST)/project0-aur
 	git clone https://aur.archlinux.org/$(subst pkgbuild/aur/,,$@).git $@
-	(cd $@ && PKGDEST=$(PKGDEST)/project0-aur makepkg -s)
+	(cd $@ && PKGDEST=$(PKGDEST)/project0-aur makepkg -s -f --cleanbuild)
 
 update-db/%:
 	repo-add $(PKGDEST)/project0-$(subst update-db/,,$@)/project0-$(subst update-db/,,$@).db.tar \

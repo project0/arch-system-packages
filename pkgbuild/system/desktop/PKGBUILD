@@ -134,3 +134,4 @@ package_project0-desktop-gnome() {
     _systemd_state systemd-networkd.service disable
     _systemd_state bluetooth.service enable
 }
+
