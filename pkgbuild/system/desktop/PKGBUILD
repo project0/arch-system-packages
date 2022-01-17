@@ -16,8 +16,9 @@ source=()
 
 package_project0-desktop() {
     depends=(
-         'project0-base-config'
-         'project0-nerd-fonts'
+        'project0-base-config'
+        'project0-nerd-fonts'
+        'project0-sweet-gtk-themes'
 
         # xorg/wayland
         'wayland-utils'
@@ -96,7 +97,7 @@ package_project0-desktop-aur() {
         # 'drawio-desktop-bin'
 
         # theming
-        'sweet-gtk-theme' 'beautyline'
+       'beautyline'
     )
 }
 
@@ -134,4 +135,5 @@ package_project0-desktop-gnome() {
     _systemd_state systemd-networkd.service disable
     _systemd_state bluetooth.service enable
 }
+
 
