@@ -163,9 +163,14 @@ package_project0-base-config() {
 
     # default options
     echo 'ro' | \
-        install -Dm0755 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/00-${pkgname}-ro"
+        install -Dm0644 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/00-${pkgname}-ro"
     echo 'systemd.unit=multi-user.target' | \
-        install -Dm0755 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/terminal/10-${pkgname}-sd-target"
+        install -Dm0644 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/terminal/10-${pkgname}-sd-target"
+
+    # ensure arch logo is always shown and not interrupted by efi vendor logos like dell
+    # https://patchwork.kernel.org/project/linux-fbdev/patch/20180912091235.20473-1-hdegoede@redhat.com/
+    echo 'video=efifb:nobgrt' | \
+        install -Dm0644 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/default/10-${pkgname}-nobgrt"
 }
 
 sha256sums=('b994d30c0be1b96dc93cea7151eba9e52af177dcb954c2c8d546a2b4fa0fbcfe'
