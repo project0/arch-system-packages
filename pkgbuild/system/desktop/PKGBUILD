@@ -22,8 +22,14 @@ package_project0-desktop() {
         # xorg/wayland
         'wayland-utils'
         'xorg-font-util' 'xorg-fonts-100dpi' 'xorg-fonts-75dpi' 'xorg-fonts-alias-100dpi' 'xorg-fonts-alias-75dpi' 'xorg-fonts-misc'
-        'vdpauinfo' 'libva-vdpau-driver'
-        'intel-media-driver' 'vulkan-intel' 'libva-intel-driver'
+
+        # intel
+        'intel-media-driver' 'vulkan-intel'
+
+        # video
+        'libvdpau' 'libvdpau-va-gl' 'libva-vdpau-driver'  'vdpauinfo'
+        'libva-vdpau-driver' 'libva-intel-driver'  'libva-utils'
+        'gst-libav' 'gstreamer-vaapi'  'gst-plugin-pipewire'
 
         # audio
         'pipewire-docs' 'pipewire-jack' 'wireplumber' # replaces pipewire-media-session
@@ -128,6 +134,3 @@ package_project0-desktop-gnome() {
     _systemd_state systemd-networkd.service disable
     _systemd_state bluetooth.service enable
 }
-
-
-
