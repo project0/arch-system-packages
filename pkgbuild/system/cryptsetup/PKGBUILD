@@ -19,7 +19,7 @@ package_project0-cryptsetup() {
     install -Dm0644 cryptsetup.mkinitcpio.conf "${pkgdir}/etc/mkinitcpio.confd/10-${pkgname}.conf"
 
     echo 'rd.luks.options=discard' | \
-        install -Dm0755 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/40-${pkgname}"
+        install -Dm0644 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/40-${pkgname}"
 
     install -Dm0755 cryptsetup.update-tpm.scripts "${pkgdir}/usr/bin/${pkgname}-update-tpm"
     install -Dm0644 cryptsetup.update-tpm.service "${pkgdir}/usr/lib/systemd/system/${pkgname}-update-tpm.service"

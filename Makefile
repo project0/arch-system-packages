@@ -11,7 +11,9 @@ clean:
 # build all packages
 .PHONY: 	pkgbuild/packages/* pkgbuild/system/* package system aur
 packages:	pkgbuild/packages/* update-db/packages
-system: 	pkgbuild/system/* 	update-db/system
+system:
+	$(MAKE) -j pkgbuild/system/*
+	$(MAKE) update-db/system
 aur: 		pkgbuild/aur/shim-signed pkgbuild/aur/yay-bin update-db/aur
 
 # per package target
