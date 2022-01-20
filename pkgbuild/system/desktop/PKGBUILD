@@ -68,11 +68,13 @@ package_project0-desktop() {
         #AUR packages
         'yay-bin'
 
-        'kubectl'
+        'kubectl' 'kubectx'
         'virtualbox' 'virtualbox-host-dkms' 'vagrant'
     )
     depends+=($(pacman -Sgq base-devel))
     depends+=($(pacman -Sgq xorg-drivers))
+
+    _systemd_state cups.service enable
 
     echo 'quiet' | \
         install -Dm0644 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/20-${pkgname}-quiet"

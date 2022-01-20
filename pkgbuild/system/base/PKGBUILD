@@ -129,6 +129,9 @@ package_project0-base-config() {
     # bashrc
     _etc_file base-config.bashrc bash.bashrc 0755
 
+    # vimrc
+    _etc_file base-config.vimrc vimrc 0655
+
     # pacman
     _etc_file base-config.pacman.conf pacman.conf
     install -Dm0644 base-config.pacman.options.conf "$pkgdir"/etc/pacman.d/10_options.conf
