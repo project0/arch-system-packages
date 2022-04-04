@@ -146,7 +146,8 @@ package_project0-base-config() {
     install -Dm0644 base-config.mkinitcpio.20-auto.conf "${pkgdir}/etc/mkinitcpio.confd/20-${pkgname}-auto.conf"
     install -Dm0644 base-config.mkinitcpio.99-fs.conf "${pkgdir}/etc/mkinitcpio.confd/99-${pkgname}-fs.conf"
 
-    install -Dm0644 base-config.mkinitcpio.linux.preset "${pkgdir}/etc/mkinitcpio.d/linux.preset"
+    _etc_file  base-config.mkinitcpio.linux.preset mkinitcpio.d/linux.preset
+    #install -Dm0644 base-config.mkinitcpio.linux.preset "${pkgdir}/etc/mkinitcpio.d/linux.preset"
 
     ## cmdline builder
     # As we need to compile cmdline options into efi during mkinitcpio, it need to be parsed during/before build
