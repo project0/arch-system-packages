@@ -38,17 +38,20 @@ update-db/%:
 $(PKGDEST)/% :
 	mkdir -p $@
 
-# run a lcaol repo
+# run a local repo
 .PHONY: run-local
 ip = $(shell ip route get 8.8.8.8 | tr -s ' ' | cut -d' ' -f7)
 run-local:
 	@echo "http://$(ip):8888/dist"
 	@echo
+	@echo ">> Install new machine:"
 	@echo curl "http://$(ip):8888/bin/install.sh" -o /tmp/install.sh
 	@echo curl "http://$(ip):8888/bin/disk.sh" -o /tmp/disk.sh
 	@echo chmod +x /tmp/install.sh  /tmp/disk.sh
 	@echo
-	@echo /tmp/disk.sh /dev/ <true:encrypt>
+	@echo "/tmp/disk.sh /dev/ <true:encrypt>"
 	@echo /tmp/install.sh \'http://$(ip):8888/dist/\$$repo\'
 	@echo
+	@echo ">> Setup local repo on existing systems"
+	@echo curl "http://$(ip):8888/repo.conf" "| sed 's/127.0.0.1/$(ip)/'" "> /etc/pacman.d/10-local-repo.conf && cat /etc/pacman.d/10-local-repo.conf >> /etc/pacman.conf"
 	python3 -m http.server -b 0.0.0.0 8888
