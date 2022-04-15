@@ -77,7 +77,7 @@ package_project0-desktop() {
     _systemd_state cups.service enable
 
     echo 'quiet' | \
-        install -Dm0644 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/20-${pkgname}-quiet"
+        install -Dm0644 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/default/20-${pkgname}-quiet"
 }
 
 
@@ -137,6 +137,8 @@ package_project0-desktop-gnome() {
     _systemd_state systemd-networkd.service disable
     _systemd_state bluetooth.service enable
 }
+
+
 
 
 

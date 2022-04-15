@@ -174,7 +174,7 @@ package_project0-base-config() {
     # ensure arch logo is always shown and not interrupted by efi vendor logos like dell
     # https://patchwork.kernel.org/project/linux-fbdev/patch/20180912091235.20473-1-hdegoede@redhat.com/
     echo 'video=efifb:nobgrt' | \
-        install -Dm0644 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/default/10-${pkgname}-nobgrt"
+        install -Dm0644 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/10-${pkgname}-nobgrt"
 }
 
 sha256sums=('b994d30c0be1b96dc93cea7151eba9e52af177dcb954c2c8d546a2b4fa0fbcfe'
@@ -183,7 +183,7 @@ sha256sums=('b994d30c0be1b96dc93cea7151eba9e52af177dcb954c2c8d546a2b4fa0fbcfe'
             '813cc0230b905fb9bade11a5aecee3b85d74d99ebb6242fff81ac5d83f1c8309'
             'de8254d1f27f165d2c59ecb6e706b57b2197b9b0a22e14ba5ea960e123082116'
             'fb63bc6b727af1d17d082af27978f20dedc52224f62ee181d6da9e57eb7c3c6c'
-            '2177fb4b9258dabebbd9bcf02279a3a638e9ec781ece48077e4545e2f522f0e6'
+            'b4f226c7177346bdeec2aa4145871e4be527d1695d30208f46e614e66e5d2958'
             '570272450a98283a783662b0300b46a899d7f28bbf728ffaa41cb99c00eb5858'
             '5d735804b1938f0e26d3a8a6a1f0c45ac473a8e935718e2ce58cac5f92015ed4'
             '8a61578dd2a1b07a776d06d2da8693ba7b96b2f1f4556d05a76612ea6a0d0809'
