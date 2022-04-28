@@ -42,7 +42,7 @@ package_project0-base-packages() {
 
         # networking
         'bridge-utils'
-        'inetutils' 'traceroute' 'bind' 'net-tools' 'ethtool'
+        'inetutils' 'traceroute' 'bind' 'net-tools' 'ethtool' 'mtr'
         'nmap' 'tcpdump' 'conntrack-tools'
         'iputils' 'ipcalc'
         'iw' 'wpa_supplicant'
