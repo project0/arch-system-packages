@@ -1,0 +1,65 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: write
+
+# Default values to simplify job configurations below.
+jobs:
+  build-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry:  ghcr.io
+          username: project0
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/project0/arch-system-packages:latest
+
+  publish-packages:
+    needs:
+      - build-image
+    environment: release
+    container:
+      image: ghcr.io/project0/arch-system-packages:latest
+      # image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ssh-key: ${{ secrets.GIT_DEPLOY_KEY }}
+
+      - name: Import GPG key
+        id: import_gpg
+        uses: hashicorp/ghaction-import-gpg@v2.1.0
+        env:
+          # These secrets will need to be configured for the repository:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Build and publish packages
+        env:
+          GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
+          GIT_REPO: git@github.com:Project0/arch-system-packages-repo.git
+        run: |
+          export GIT_SSH_COMMAND=$(git config --local --get core.sshCommand)
+          git config --global user.name project-service-user
+          git config --global user.email arch.packages@project0.de
+
+          chmod a+x publish.sh
+          ./publish.sh

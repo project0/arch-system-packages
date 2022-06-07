@@ -5,6 +5,7 @@
 *.files.tar
 
 dist/
+dist-git/
 
 pkg/
 src/

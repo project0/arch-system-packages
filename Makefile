@@ -1,6 +1,9 @@
-export PKGDEST := $(PWD)/dist
+export PKGDEST ?= $(PWD)/dist
 export PKGEXT  := .pkg.tar.zst
 export PKGREL  := 1
+
+MAKEPKG_ARGS :=
+REPO_ADD_ARGS :=
 
 AUR_DIR = $(PWD)/pkgbuild/aur
 
@@ -18,20 +21,20 @@ aur: 		pkgbuild/aur/shim-signed pkgbuild/aur/yay-bin update-db/aur
 
 # per package target
 pkgbuild/system/* : |  $(PKGDEST)/project0-system
-	updpkgsums $@/PKGBUILD
-	(cd $@ && PKGDEST=$(PKGDEST)/project0-system makepkg -s -f --cleanbuild)
+	updpkgsums $@/PKGBUILD || true
+	(cd $@ && PKGDEST=$(PKGDEST)/project0-system makepkg $(MAKEPKG_ARGS) -s -f --cleanbuild)
 
 pkgbuild/packages/* : | $(PKGDEST)/project0-packages
 	updpkgsums $@/PKGBUILD
-	(cd $@ && PKGDEST=$(PKGDEST)/project0-packages makepkg -s -f --cleanbuild)
+	(cd $@ && PKGDEST=$(PKGDEST)/project0-packages makepkg $(MAKEPKG_ARGS) -s -f --cleanbuild)
 
 # build some dependent aur packages
 pkgbuild/aur/% : | $(PKGDEST)/project0-aur
 	git clone https://aur.archlinux.org/$(subst pkgbuild/aur/,,$@).git $@
-	(cd $@ && PKGDEST=$(PKGDEST)/project0-aur makepkg -s -f --cleanbuild)
+	(cd $@ && PKGDEST=$(PKGDEST)/project0-aur makepkg $(MAKEPKG_ARGS) -s -f --cleanbuild)
 
 update-db/%:
-	repo-add $(PKGDEST)/project0-$(subst update-db/,,$@)/project0-$(subst update-db/,,$@).db.tar \
+	repo-add $(REPO_ADD_ARGS) $(PKGDEST)/project0-$(subst update-db/,,$@)/project0-$(subst update-db/,,$@).db.tar \
 		$(PKGDEST)/project0-$(subst update-db/,,$@)/*$(PKGEXT)
 
 .PRECIOUS: $(PKGDEST)/%
@@ -40,7 +43,29 @@ $(PKGDEST)/% :
 
 # run a local repo
 .PHONY: run-local
-ip = $(shell ip route get 8.8.8.8 | tr -s ' ' | cut -d' ' -f7)
+
+REPO_URL ?= http://$(shell ip route get 8.8.8.8 | tr -s ' ' | cut -d' ' -f7)
+
+bootstrap-script:
+	@echo curl "$(REPO_URL)/bin/install.sh" -o /tmp/project0-bootstrap-install.sh
+	@echo curl "$(REPO_URL)/bin/disk.sh" -o /tmp/project0-bootstrap-disk.sh
+	@echo chmod a+x /tmp/project0-bootstrap-install.sh /tmp/project0-bootstrap-disk.sh
+	@echo "# Setup disk: /tmp/project0-bootstrap-disk.sh /dev/disk <true:encrypt>'"
+	@echo "# Install arch: /tmp/project0-bootstrap-install.sh $(REPO_URL)'"
+
+repo-readme:
+	@echo '# Arch Linux System Packages Repo'
+	@echo '> Note: This page is auto generated!'
+	@echo '## Init Install scripts'
+	@echo '```bash'
+	$(MAKE) -s bootstrap-script
+	@echo '```'
+	@echo '## Pacman config'
+	@echo '```ini'
+	sed "s!http://127.0.0.1:8888/dist!$(REPO_URL)!" repo.conf
+	@echo
+	@echo '```'
+
 run-local:
 	@echo "http://$(ip):8888/dist"
 	@echo
