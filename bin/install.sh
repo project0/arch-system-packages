@@ -8,13 +8,10 @@ ARCH_INSTALL=${2-/mnt/arch_install}
 cp /etc/pacman.conf "/tmp/pacman.conf"
 cat << EOF >> "/tmp/pacman.conf"
 [project0-system]
-SigLevel = Optional TrustAll
 Server = $REPO_SERVER
 [project0-aur]
-SigLevel = Optional TrustAll
 Server = $REPO_SERVER
 [project0-packages]
-SigLevel = Optional TrustAll
 Server = $REPO_SERVER
 EOF
 

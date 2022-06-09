@@ -12,6 +12,7 @@ test -n "$GPG_FINGERPRINT" || (echo "Fatal: empty GPG_FINGERPRINT"; exit 1)
 DOMAIN=arch.packages.project0.de
 export REPO_URL=https://${DOMAIN}
 export PKGDEST=$(pwd)/dist-git
+export GPG_FINGERPRINT
 
 make clean
 (
@@ -23,13 +24,15 @@ make clean
   git remote add origin "${GIT_REPO}"
 )
 
-make all MAKEPKG_ARGS="--sign --key ${GPG_FINGERPRINT}" REPO_ADD_ARGS="--sign --key ${GPG_FINGERPRINT}"
+make all
 
 make -s repo-readme > "$PKGDEST/README.md"
 cp -Rva bin/ "$PKGDEST/bin"
 
 # cname file is required for github pages
 echo "$DOMAIN" > "$PKGDEST/CNAME"
+
+gpg -a --export "$GPG_FINGERPRINT" > "${PKGDEST}/key.asc"
 
 (
   cd "$PKGDEST"

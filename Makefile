@@ -2,8 +2,14 @@ export PKGDEST ?= $(PWD)/dist
 export PKGEXT  := .pkg.tar.zst
 export PKGREL  := 1
 
+GPG_FINGERPRINT ?=
+ifeq ($(GPG_FINGERPRINT),)
 MAKEPKG_ARGS :=
 REPO_ADD_ARGS :=
+else
+MAKEPKG_ARGS := --sign --key $(GPG_FINGERPRINT)
+REPO_ADD_ARGS := --sign --key $(GPG_FINGERPRINT)
+endif
 
 AUR_DIR = $(PWD)/pkgbuild/aur
 
@@ -47,6 +53,8 @@ $(PKGDEST)/% :
 REPO_URL ?= http://$(shell ip route get 8.8.8.8 | tr -s ' ' | cut -d' ' -f7)
 
 bootstrap-script:
+	@echo 'curl -sL $(REPO_URL)/key.asc | pacman-key -a'
+	@echo 'pacman-key --lsign-key $(GPG_FINGERPRINT)'
 	@echo curl "$(REPO_URL)/bin/install.sh" -o /tmp/project0-bootstrap-install.sh
 	@echo curl "$(REPO_URL)/bin/disk.sh" -o /tmp/project0-bootstrap-disk.sh
 	@echo chmod a+x /tmp/project0-bootstrap-install.sh /tmp/project0-bootstrap-disk.sh
@@ -56,14 +64,26 @@ bootstrap-script:
 repo-readme:
 	@echo '# Arch Linux System Packages Repo'
 	@echo '> Note: This page is auto generated!'
+	@echo
 	@echo '## Init Install scripts'
 	@echo '```bash'
 	$(MAKE) -s bootstrap-script
 	@echo '```'
+	@echo
 	@echo '## Pacman config'
 	@echo '```ini'
 	sed "s!http://127.0.0.1:8888/dist!$(REPO_URL)!" repo.conf
 	@echo
+	@echo '```'
+	@echo
+	@echo '## Key'
+	@echo 'Fingerprint `$(GPG_FINGERPRINT)`'
+	@echo
+	@echo '[Public Key]($(REPO_URL)/key.asc)'
+	@echo '```bash'
+	@echo 'curl -sL $(REPO_URL)/key.asc | gpg'
+	@echo 'curl -sL $(REPO_URL)/key.asc | sudo pacman-key -a'
+	@echo 'sudo pacman-key --lsign-key $(GPG_FINGERPRINT)'
 	@echo '```'
 
 run-local:
