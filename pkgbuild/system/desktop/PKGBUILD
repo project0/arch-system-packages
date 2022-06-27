@@ -136,6 +136,10 @@ package_project0-desktop-gnome() {
     _systemd_state NetworkManager.service enable
     _systemd_state systemd-networkd.service disable
     _systemd_state bluetooth.service enable
+
+    # Enable native wayland for firefox on wayland only
+    printf '[Service]\nEnvironment="%s"\n' "MOZ_ENABLE_WAYLAND=1" | \
+         install -Dm0644 /dev/stdin "${pkgdir}/usr/lib/systemd/user/org.gnome.Shell@wayland.service.d/project0-desktop.conf"
 }
 
 
