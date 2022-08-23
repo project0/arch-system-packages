@@ -93,6 +93,7 @@ package_project0-desktop-aur() {
         'aws-cli-v2-bin' 'aws-session-manager-plugin' 'awsvpnclient'
         'postman-bin' 'yay-bin'
         'remarshal'
+        'imhex-bin'
 
         # 'notable' 'joplin-appimage'
         # 'pencil-bin'

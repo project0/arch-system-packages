@@ -1,6 +1,6 @@
 # Maintainer: Richard Hillmann <richie at project0 dot de>
 pkgname=project0-sweet-gtk-themes
-pkgver=3.0
+pkgver=20220820
 pkgrel=1
 pkgdesc="Sweet themes"
 arch=('any')
@@ -10,28 +10,56 @@ conflicts=(
     sweet-gtk-theme
 )
 
-_kinds=(Sweet Sweet-mars Sweet-Dark Sweet-Ambar Sweet-Ambar-Blue)
-for s in "${_kinds[@]}" ; do
-    source+=("${pkgname}-${pkgver}-${s}-v40.zip::https://github.com/EliverLara/Sweet/releases/download/v$pkgver/${s}-v40.zip")
+_kinds=(
+    Sweet
+    Sweet-mars
+    Sweet-nova
+    Sweet-Ambar
+    Sweet-Ambar-Blue
+)
+_commits=(
+    90afc51 # Sweet
+    3fa79ba # Sweet-mars
+    0061be8 # Sweet-nova
+    c1b92f1 # Sweet-Ambar
+    3be6422 # Sweet-Ambar-Blue
+)
+
+function srcname () {
+    c="${_commits[$1]}"
+    k="${_kinds[$1]}"
+    echo "git.${pkgname}-${k}-${c}"
+}
+
+
+for i in "${!_kinds[@]}"; do
+    c="${_commits[$i]}"
+    k="${_kinds[$i]}"
+    source+=("$(srcname "$i")::git+https://github.com/EliverLara/Sweet.git#commit=$c")
 done
 
-sha256sums=('bce82b6ac4807c3c2d14a7a8e5084f1ddfacb2fc63d8a8e10c7a7b17ba2ec94a'
-            '7cb76838940756f2c3c155cd880c4f064a35ec09283dd69c9c3ab865cd88560c'
-            '28705ec474625ef8643afefa97f56f594134c791d4527806345f10cb86d2a7cd'
-            'e5882f106deedbf392b336ecf4b3c02b62795d3eed2c47bba0c628c4a6a0feaa'
-            '80f0253a4271059416dab16c765595488c7f388b8376de2fecb376e9a0c2aa57')
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP')
 
-prepare(){
-    for s in "${_kinds[@]}" ; do
-        # remove v40 suffix
-        mv "${srcdir}/${s}-v40"  "${srcdir}/${s}"
-    done
+pkgver() {
+    (cd "${srcdir}/$(srcname "0")" && git log -1 --format=%ad --date=format:'%Y%m%d')
+}
+
+prepare() {
+    find "${srcdir}" -type f -name "*scss" -delete
+    rm -rf "${srcdir}"/*/{Art,src}
+    find "${srcdir}" -type d -empty -delete
 }
 
 package() {
     themes="${pkgdir}/usr/share/themes"
-    for s in "${_kinds[@]}" ; do
-        install -dm755 "${themes}/${s}"
-        cp -r  "${srcdir}/${s}/"* "${themes}/${s}/"
+
+    for i in "${!_kinds[@]}"; do
+        k="${_kinds[$i]}"
+        install -dm755 "${themes}/${k}"
+        cp -r "${srcdir}/$(srcname "$i")/"* "${themes}/${k}/"
     done
 }

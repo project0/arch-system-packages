@@ -13,3 +13,5 @@ pkgbuild/aur/
 
 *.zip
 *-LICENSE
+
+git.*
