@@ -4,10 +4,18 @@ pkgver=20220820
 pkgrel=1
 pkgdesc="Sweet themes"
 arch=('any')
-url="https://github.com/EliverLara/Sweet"
+url="https://github.com/EliverLara/Sweet.git"
 license=('GNU')
 conflicts=(
     sweet-gtk-theme
+)
+
+_branches=(
+    master
+    mars
+    nova
+    Ambar
+    Ambar-Blue
 )
 
 _kinds=(
@@ -18,11 +26,11 @@ _kinds=(
     Sweet-Ambar-Blue
 )
 _commits=(
-    90afc51 # Sweet
-    3fa79ba # Sweet-mars
-    0061be8 # Sweet-nova
-    c1b92f1 # Sweet-Ambar
-    3be6422 # Sweet-Ambar-Blue
+    90afc51ca4eb619ba119ff4616fdb675828cd57c # master
+    e4d766908395cb661507dbf09c437842509b8c87 # mars
+    0061be8e6b4a0e6bb0a8f19d3f939a527414ff31 # nova
+    c1b92f1d70dea532baf353e6a7b5a2837077c534 # Ambar
+    7749e1eab0477c0c4c76b9de24373007bb3c17fe # Ambar-Blue
 )
 
 function srcname () {
@@ -35,7 +43,7 @@ function srcname () {
 for i in "${!_kinds[@]}"; do
     c="${_commits[$i]}"
     k="${_kinds[$i]}"
-    source+=("$(srcname "$i")::git+https://github.com/EliverLara/Sweet.git#commit=$c")
+    source+=("$(srcname "$i")::git+${url}#commit=$c")
 done
 
 sha256sums=('SKIP'
