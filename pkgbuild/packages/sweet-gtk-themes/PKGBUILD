@@ -1,6 +1,6 @@
 # Maintainer: Richard Hillmann <richie at project0 dot de>
 pkgname=project0-sweet-gtk-themes
-pkgver=20220820
+pkgver=20220926
 pkgrel=1
 pkgdesc="Sweet themes"
 arch=('any')
@@ -26,11 +26,11 @@ _kinds=(
     Sweet-Ambar-Blue
 )
 _commits=(
-    90afc51ca4eb619ba119ff4616fdb675828cd57c # master
-    e4d766908395cb661507dbf09c437842509b8c87 # mars
-    0061be8e6b4a0e6bb0a8f19d3f939a527414ff31 # nova
-    c1b92f1d70dea532baf353e6a7b5a2837077c534 # Ambar
-    7749e1eab0477c0c4c76b9de24373007bb3c17fe # Ambar-Blue
+    7419abb592fbb8f032d9b8735b6b6f81b31214a6 # master
+    9622074c79994c0abf22b37baeab682b4d603e25 # mars
+    2477ffcd7f0c65e8eed3c537bda5b84c0447e4cd # nova
+    a1716f02f0e7fd942cb29093b7e7cb6e2961f221 # Ambar
+    d604db9073508393160c0526a5f012293a1cebc4 # Ambar-Blue
 )
 
 function srcname () {
