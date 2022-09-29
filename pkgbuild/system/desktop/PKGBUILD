@@ -54,8 +54,11 @@ package_project0-desktop() {
         'wireshark-cli' 'wireshark-qt'
 
         'gopass' 'gopass-jsonapi' 'gopass-summon-provider'
+        'keybase' 'keybase-gui' 'kbfs'
 
         'inkscape' 'gimp' 'krita'
+
+        'discord'
 
         'solaar' # logitech device paring
 
@@ -70,6 +73,7 @@ package_project0-desktop() {
 
         'kubectl' 'kubectx'
         'virtualbox' 'virtualbox-host-dkms' 'vagrant'
+
     )
     depends+=($(pacman -Sgq base-devel))
     depends+=($(pacman -Sgq xorg-drivers))

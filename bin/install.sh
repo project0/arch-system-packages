@@ -8,14 +8,17 @@ ARCH_INSTALL=${2-/mnt/arch_install}
 cp /etc/pacman.conf "/tmp/pacman.conf"
 cat << EOF >> "/tmp/pacman.conf"
 [project0-system]
-Server = $REPO_SERVER
+Server = $REPO_SERVER/\$repo
 [project0-aur]
-Server = $REPO_SERVER
+Server = $REPO_SERVER/\$repo
 [project0-packages]
-Server = $REPO_SERVER
+Server = $REPO_SERVER/\$repo
 EOF
 
 read -p "Hostname: " -r hostname
+
+# ensure keyring is up to date
+pacman -Sy --noconfirm archlinux-keyring
 pacstrap -i -C "/tmp/pacman.conf" "$ARCH_INSTALL" base linux "project0-host-${hostname,,}"
 
 # finalize
