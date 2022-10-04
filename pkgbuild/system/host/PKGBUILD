@@ -6,7 +6,6 @@ pkgver="$(_pkgver)"
 pkgrel="${PKGREL-1}"
 pkgbase='project0-host'
 pkgname=(
-        "${pkgbase}-mucn1122"
         "${pkgbase}-daedalus"
 )
 pkgdesc='Project0 package per host'
