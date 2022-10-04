@@ -13,22 +13,11 @@ pkgdesc='Project0 package per host'
 arch=('any')
 license=('MIT')
 
-# AS24 - Dell Latitude 7420
-package_project0-host-mucn1122() {
-    depends=(
-        'project0-desktop-gnome' 'project0-refind-secureboot' 'project0-cryptsetup'
-        'modemmanager'
-    )
-    printf 'mucn1122' | install -Dm0644 /dev/stdin "${pkgdir}/etc/hostname"
-
-    # support integrated LTE modem
-    _systemd_state ModemManager.service enable
-}
-
 # Traefik - Lenovo T14 Gen 3 AMD
 package_project0-host-daedalus() {
     depends=(
         'project0-desktop-gnome' 'project0-refind-secureboot' 'project0-cryptsetup'
+        'vulkan-radeon'
     )
     printf 'daedalus' | install -Dm0644 /dev/stdin "${pkgdir}/etc/hostname"
 }
