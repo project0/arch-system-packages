@@ -65,7 +65,7 @@ package_project0-base-packages() {
         'zsh' 'zsh-completions' 'zsh-syntax-highlighting'
         'lsof' 'tree' 'rsync' 'bc'
         'tmux' 'screen'
-        'jq' 'yq-go'
+        'jq' 'go-yq'
 
         # utils
         'pciutils' 'usbutils' 'psutils'
