@@ -53,7 +53,7 @@ $(PKGDEST)/% :
 REPO_URL ?= http://$(shell ip route get 8.8.8.8 | tr -s ' ' | cut -d' ' -f7)
 
 bootstrap-script:
-	@echo 'curl -sL $(REPO_URL)/key.asc | pacman-key -a'
+	@echo 'curl -sL $(REPO_URL)/key.asc | pacman-key -a -'
 	@echo 'pacman-key --lsign-key $(GPG_FINGERPRINT)'
 	@echo curl "$(REPO_URL)/bin/install.sh" -o /tmp/project0-bootstrap-install.sh
 	@echo curl "$(REPO_URL)/bin/disk.sh" -o /tmp/project0-bootstrap-disk.sh
@@ -82,7 +82,7 @@ repo-readme:
 	@echo '[Public Key]($(REPO_URL)/key.asc)'
 	@echo '```bash'
 	@echo 'curl -sL $(REPO_URL)/key.asc | gpg'
-	@echo 'curl -sL $(REPO_URL)/key.asc | sudo pacman-key -a'
+	@echo 'curl -sL $(REPO_URL)/key.asc | sudo pacman-key -a -'
 	@echo 'sudo pacman-key --lsign-key $(GPG_FINGERPRINT)'
 	@echo '```'
 
