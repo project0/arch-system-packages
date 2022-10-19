@@ -140,21 +140,29 @@ if [ -z "$SKIP_FS_FORMAT" ]; then
   mkfs.vfat     "$device_esp"
   mkfs.ext4  -F "$device_boot"
   mkfs.btrfs -f "$device_root"
-fi
 
-if [ -z "$SKIP_MOUNT" ]; then
+  # prepare btrfs subvolumes
   mkdir -p "$ARCH_INSTALL"
   mount "$device_root" "$ARCH_INSTALL"
 
-  ### btrfs create all subvolumes
-  for subvol in {'',home,var/log,var/spool,var/lib/docker}; do
-    subvol="${subvol//\//_}"
-    btrfs subvolume create "$ARCH_INSTALL"/@"$subvol"
-  done
-  btrfs subvolume set-default "$ARCH_INSTALL"/@
+    ### btrfs create all subvolumes
+    for subvol in {'',home,var/log,var/spool,var/lib/docker}; do
+      subvol="${subvol//\//_}"
+      btrfs subvolume create "$ARCH_INSTALL"/@"$subvol"
+    done
+    btrfs subvolume set-default "$ARCH_INSTALL"/@
 
   # proper remount for fstab generation
   umount "$ARCH_INSTALL"
+fi
+
+if [ -z "$SKIP_MOUNT" ]; then
+
+  if [ "$ENCRYPT" == "true" ] && [ ! -b "$device_crypt" ]; then
+    cryptsetup luksOpen "$device_crypt" "$DM_NAME"
+  fi
+
+  # proper remount for fstab generation
   mount "$device_root" "$ARCH_INSTALL"
 
   # subvols
@@ -170,6 +178,6 @@ if [ -z "$SKIP_MOUNT" ]; then
   mount "$device_esp" "$ARCH_INSTALL"/efi
 
   # setup EFI
-  mkdir -p "$ARCH_INSTALL"/efi/EFI  "$ARCH_INSTALL"/boot/efi
+  mkdir -p "$ARCH_INSTALL"/efi/EFI "$ARCH_INSTALL"/boot/efi
   mount --bind "$ARCH_INSTALL"/efi "$ARCH_INSTALL"/boot/efi
 fi

@@ -1,7 +1,7 @@
 #!/usr/bin/bash -e
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-REPO_SERVER=${1-'http://localhost:8888/dist/$repo'}
+REPO_SERVER=${1-'https://arch.packages.project0.de'}
 ARCH_INSTALL=${2-/mnt/arch_install}
 
 # curl raw.github...
