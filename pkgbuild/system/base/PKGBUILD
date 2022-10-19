@@ -137,6 +137,7 @@ package_project0-base-config() {
     _etc_file base-config.pacman.conf pacman.conf
     install -Dm0644 base-config.pacman.options.conf "$pkgdir"/etc/pacman.d/10_options.conf
     install -Dm0644 base-config.pacman.repo.conf "$pkgdir"/etc/pacman.d/20_repo.conf
+    install -Dm0644 base-config.pacman.repo-gen.conf "$pkgdir"/etc/pacman.d/30_repo_gen.conf
     install -Dm0644 base-config.pacman.repo-custom.conf "$pkgdir"/etc/pacman.d/50_repo-custom.conf
     backup+=(etc/pacman.d/50_repo-custom.conf)
 

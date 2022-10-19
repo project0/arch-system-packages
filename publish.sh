@@ -24,10 +24,15 @@ make clean
   git remote add origin "${GIT_REPO}"
 )
 
+# generate internal package repo config
+make -s repo-conf > pkgbuild/system/base/base-config.pacman.repo-gen.conf
+# build packages
 make all
 
+# generate readme and add scripts
 make -s repo-readme > "$PKGDEST/README.md"
 cp -Rva bin/ "$PKGDEST/bin"
+make -s bootstrap-script > "$PKGDEST/bin/bootstrap.sh"
 
 # cname file is required for github pages
 echo "$DOMAIN" > "$PKGDEST/CNAME"

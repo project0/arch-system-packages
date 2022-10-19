@@ -53,26 +53,31 @@ $(PKGDEST)/% :
 REPO_URL ?= http://$(shell ip route get 8.8.8.8 | tr -s ' ' | cut -d' ' -f7)
 
 bootstrap-script:
+	@echo '#!/usr/bin/env bash'
 	@echo 'curl -sL $(REPO_URL)/key.asc | pacman-key -a -'
 	@echo 'pacman-key --lsign-key $(GPG_FINGERPRINT)'
 	@echo curl "$(REPO_URL)/bin/install.sh" -o /tmp/project0-bootstrap-install.sh
 	@echo curl "$(REPO_URL)/bin/disk.sh" -o /tmp/project0-bootstrap-disk.sh
 	@echo chmod a+x /tmp/project0-bootstrap-install.sh /tmp/project0-bootstrap-disk.sh
-	@echo "# Setup disk: /tmp/project0-bootstrap-disk.sh /dev/disk <true:encrypt>'"
-	@echo "# Install arch: /tmp/project0-bootstrap-install.sh $(REPO_URL)'"
+	@echo "/tmp/project0-bootstrap-disk.sh -h"
+	@echo "# Install arch: /tmp/project0-bootstrap-install.sh [$(REPO_URL)]"
+
+repo-conf:
+	sed "s!http://127.0.0.1:8888/dist!$(REPO_URL)!" repo.conf
 
 repo-readme:
 	@echo '# Arch Linux System Packages Repo'
 	@echo '> Note: This page is auto generated!'
 	@echo
 	@echo '## Init Install scripts'
+	@echo "[Bootstrap script]($(REPO_URL)/bin/bootstrap.sh)"
 	@echo '```bash'
 	$(MAKE) -s bootstrap-script
 	@echo '```'
 	@echo
 	@echo '## Pacman config'
 	@echo '```ini'
-	sed "s!http://127.0.0.1:8888/dist!$(REPO_URL)!" repo.conf
+	$(MAKE) -s repo-conf
 	@echo
 	@echo '```'
 	@echo
