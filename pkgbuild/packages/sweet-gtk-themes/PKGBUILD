@@ -10,6 +10,14 @@ conflicts=(
     sweet-gtk-theme
 )
 
+sha256sums=(
+    'SKIP'
+    'SKIP'
+    'SKIP'
+    'SKIP'
+    'SKIP'
+)
+
 _branches=(
     master
     mars
@@ -26,11 +34,11 @@ _kinds=(
     Sweet-Ambar-Blue
 )
 _commits=(
-    7419abb592fbb8f032d9b8735b6b6f81b31214a6 # master
-    9622074c79994c0abf22b37baeab682b4d603e25 # mars
-    2477ffcd7f0c65e8eed3c537bda5b84c0447e4cd # nova
-    a1716f02f0e7fd942cb29093b7e7cb6e2961f221 # Ambar
-    d604db9073508393160c0526a5f012293a1cebc4 # Ambar-Blue
+    66dd42e15931c3b0c1ea009ff57d93cc59fd574a # master
+    40a335e66909c67365862725e19b3dd8f405e538 # mars
+    87122438faa4f052896b4ddff1b68940aca0a74c # nova
+    5028279729d4796eed64f7852982fd9ea2e81e61 # Ambar
+    00582dde30f3ce95cd9d6d8bf03b5d311db1dcec # Ambar-Blue
 )
 
 function srcname () {
@@ -45,12 +53,6 @@ for i in "${!_kinds[@]}"; do
     k="${_kinds[$i]}"
     source+=("$(srcname "$i")::git+${url}#commit=$c")
 done
-
-sha256sums=('SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP'
-            'SKIP')
 
 pkgver() {
     (cd "${srcdir}/$(srcname "0")" && git log -1 --format=%ad --date=format:'%Y%m%d')
