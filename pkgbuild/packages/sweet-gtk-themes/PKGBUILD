@@ -34,11 +34,11 @@ _kinds=(
     Sweet-Ambar-Blue
 )
 _commits=(
-    66dd42e15931c3b0c1ea009ff57d93cc59fd574a # master
-    40a335e66909c67365862725e19b3dd8f405e538 # mars
-    87122438faa4f052896b4ddff1b68940aca0a74c # nova
-    5028279729d4796eed64f7852982fd9ea2e81e61 # Ambar
-    00582dde30f3ce95cd9d6d8bf03b5d311db1dcec # Ambar-Blue
+    fd7f419247fce1e115c3cf23f9640b45ac54bff2 # master
+    098e3144614aca7bf6235343f62c1da1d982f243 # mars
+    a73fd26ace98db827ef347bf96d7a8d0595556fb # nova
+    df60b6056ee5e86d3093485c5e3ba8d4b2d51370 # Ambar
+    c46f4f22bcd995a644ff9696665530ddcad009ba # Ambar-Blue
 )
 
 function srcname () {
