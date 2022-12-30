@@ -6,17 +6,17 @@ ALL_kver="/boot/vmlinuz-${_KERNEL}"
 
 PRESETS=('default' 'fallback' 'terminal')
 
-default_image="/boot/initramfs-${_KERNEL}.img"
+# default_image="/boot/initramfs-${_KERNEL}.img"
 default_microcode=(/boot/*-ucode.img)
-default_efi_image="/boot/archlinux-${_KERNEL}.efi"
+default_uki="/boot/archlinux-${_KERNEL}.efi"
 default_options="--cmdline /etc/kernel/cmdline.generated/default --splash /usr/share/systemd/bootctl/splash-arch.bmp"
 
-terminal_image="/boot/initramfs-${_KERNEL}.img"
-terminal_efi_image="/boot/archlinux-${_KERNEL}-terminal.efi"
+# terminal_image="/boot/initramfs-${_KERNEL}.img"
+terminal_uki="/boot/archlinux-${_KERNEL}-terminal.efi"
 terminal_options="--cmdline /etc/kernel/cmdline.generated/terminal"
 terminal_microcode=(/boot/*-ucode.img)
 
 # fallback does not contain ucode
-fallback_image="/boot/initramfs-${_KERNEL}-fallback.img"
-fallback_efi_image="/boot/archlinux-${_KERNEL}-fallback.efi"
+# fallback_image="/boot/initramfs-${_KERNEL}-fallback.img"
+fallback_uki="/boot/archlinux-${_KERNEL}-fallback.efi"
 fallback_options="--cmdline /etc/kernel/cmdline.generated/fallback -S autodetect"
