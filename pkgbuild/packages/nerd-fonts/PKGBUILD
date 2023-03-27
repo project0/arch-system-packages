@@ -1,7 +1,7 @@
 # Maintainer: Richard Hillmann <richie at project0 dot de>
 # https://wiki.archlinux.org/title/Font_package_guidelines
 pkgname=project0-nerd-fonts
-pkgver=2.3.3
+pkgver=2.2.2
 pkgrel=1
 pkgdesc="Collection of patched nerd fonts"
 arch=('any')
@@ -23,11 +23,11 @@ for s in SourceCodePro FiraCode DroidSansMono JetBrainsMono; do
     source+=("${pkgname}-${pkgver}-${s}.zip::https://github.com/ryanoasis/nerd-fonts/releases/download/v$pkgver/${s}.zip")
 done
 
-sha256sums=('1f6ad4edae6479aaace3112ede5279a23284ae54b2a34db66357aef5f64df160'
-            '5fe3f414fc1c985c59283565176a71243f9983fb7ba5c9da37357d4b552eda15'
-            '12c58f67731354f78e1a55030954bd326e380d1726c7f96f3db1089d53ecf609'
-            '316e04b26f1eb2035a39981e02873ee2bacacbabfa176c1ee5e7a6edb3a04cd0'
-            '187c316bb77ed1c824099fe8621a17d14f7de8a6ce5b14a1a04de0ae674b4aa6')
+sha256sums=('245b522abb5aba0d8e84898bf6d5e95102620637626106bfd0061189a2370360'
+            'a736448f04c73bdefefc356c024a5d9250ec086a0621c84179fc44587650c731'
+            '20182e6e7c42cf8ab479d83af3200266261ec9bd4e80cdaceb793ecd56c9a398'
+            'b6fef0c6f789d2f317b192588b5d7aab45ab7b237bd163deb4ed18269ad62192'
+            '8b9b6c58081d179ecd50839a6b211dbd24b61e66d87715860129b6138982ee7b')
 
 prepare() {
     find "$srcdir" -type f -iname '*windows*' -delete  # the windows compatible fonts are not necessary on linux ;)
