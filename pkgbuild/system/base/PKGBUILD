@@ -164,7 +164,6 @@ package_project0-base-config() {
     # generated cmdline on hook:
     install -dm0755 "${pkgdir}/etc/kernel/cmdline.generated/"
     # should run before mkinitcpio (90)
-    install -Dm0644 base-config.kernel.cmdline.hook "$pkgdir"/usr/share/libalpm/hooks/80-"$pkgname"-kernel-cmdline.hook
     install -Dm0755 base-config.kernel.cmdline.scripts "${pkgdir}/usr/bin/${pkgname}-kernel-cmdline-generate"
 
     # default options
@@ -179,9 +178,9 @@ package_project0-base-config() {
         install -Dm0644 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/10-${pkgname}-nobgrt"
 }
 
-sha256sums=('b994d30c0be1b96dc93cea7151eba9e52af177dcb954c2c8d546a2b4fa0fbcfe'
-            'ff1ada68a598a6116d628a6278211182f308b31f3b1bf515ad4837c5548774b2'
-            '4d9d019411251c38339ee9231eb7a6483b7af675ec4f21943eeffc4843ea0e72'
+sha256sums=('88fe7381ebf87647f82220c8c951b40d72a2fd7736ffa211f9f9209a254b715b'
+            'b994d30c0be1b96dc93cea7151eba9e52af177dcb954c2c8d546a2b4fa0fbcfe'
+            'add3a21089978bd76b6c4bd34e3e53403daafeea3c77a66a9092b1dab609cffb'
             '813cc0230b905fb9bade11a5aecee3b85d74d99ebb6242fff81ac5d83f1c8309'
             'de8254d1f27f165d2c59ecb6e706b57b2197b9b0a22e14ba5ea960e123082116'
             'fb63bc6b727af1d17d082af27978f20dedc52224f62ee181d6da9e57eb7c3c6c'
@@ -189,11 +188,12 @@ sha256sums=('b994d30c0be1b96dc93cea7151eba9e52af177dcb954c2c8d546a2b4fa0fbcfe'
             '570272450a98283a783662b0300b46a899d7f28bbf728ffaa41cb99c00eb5858'
             '5d735804b1938f0e26d3a8a6a1f0c45ac473a8e935718e2ce58cac5f92015ed4'
             '8a61578dd2a1b07a776d06d2da8693ba7b96b2f1f4556d05a76612ea6a0d0809'
-            'dbd28b0673600fc4483f26b7802ed2951140c175ba317fa1b4ec4319a56f2fc1'
+            'eb6113a39ea36b1c2145a97475188876d39bcbc36fe76795f1e91fab422a7c8c'
             'bd58fc9ec3aa2c4fc4a0b2e635131f79749e1071ea98d71ba7470b0aa8152dc6'
             'd93aaaed61dac0568f510d5f967c4b9e9444c7cc317b364f2859990f0c327e3f'
             'a503cd5d91232967a564b70e6c30222af8bf8c7e42de476cf0753f902193d0ae'
             '306b26e7a9854ded11056efb70e13379b2663db697b9bdd97239fee07487833b'
+            '0b581c8ede713d2d33c05c567a36e1f5da25eaa2a10a79bcca29facccc35fdbf'
             'aee5773d632917370bf971cba1fd24cb2f4ade5d2ada72d27953b76affdbcdd8'
             '5061c5d6d784b1315a992e2de91433eb35c381c13de627414997efbfc12a8855'
             'c2d53ab702c0c70a8ce1609a18aedc8d4e1002fa9e3d4c1aea1f73c9bf4d0945'

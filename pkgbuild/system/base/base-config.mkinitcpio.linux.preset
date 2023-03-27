@@ -1,5 +1,7 @@
 _KERNEL="linux"
 
+/usr/bin/project0-base-config-kernel-cmdline-generate
+
 ALL_config="/etc/mkinitcpio.conf"
 # ALL_microcode=(/boot/*-ucode.img)
 ALL_kver="/boot/vmlinuz-${_KERNEL}"

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Update kernel cmdlines
+# Generate kernel cmdlines
 
 ## Detect devices
 _dev_uuid() {

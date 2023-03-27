@@ -1,7 +1,7 @@
 # Maintainer: Richard Hillmann <richie at project0 dot de>
 # https://wiki.archlinux.org/title/Font_package_guidelines
 pkgname=project0-nerd-fonts
-pkgver=2.2.1
+pkgver=2.3.3
 pkgrel=1
 pkgdesc="Collection of patched nerd fonts"
 arch=('any')
