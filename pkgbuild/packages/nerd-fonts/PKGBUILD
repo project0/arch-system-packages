@@ -23,11 +23,11 @@ for s in SourceCodePro FiraCode DroidSansMono JetBrainsMono; do
     source+=("${pkgname}-${pkgver}-${s}.zip::https://github.com/ryanoasis/nerd-fonts/releases/download/v$pkgver/${s}.zip")
 done
 
-sha256sums=('245b522abb5aba0d8e84898bf6d5e95102620637626106bfd0061189a2370360'
-            'f9c5cb60205f2945184f69e42460dd1289aa9d8effccc890c474307d1f9233bd'
-            '63410350230ad9c1873df4b1e154066d809cff2490e5bbc440f05d7967ee8e2f'
-            '14e744ab94048937c1121556ba5af42b30b08560a383d9af9ec4d19c34b457d4'
-            '59dd2dc001a54e6d1c6c233449c51094650c0ef1fe76c87a8524eb5def4f1db8')
+sha256sums=('1f6ad4edae6479aaace3112ede5279a23284ae54b2a34db66357aef5f64df160'
+            '5fe3f414fc1c985c59283565176a71243f9983fb7ba5c9da37357d4b552eda15'
+            '12c58f67731354f78e1a55030954bd326e380d1726c7f96f3db1089d53ecf609'
+            '316e04b26f1eb2035a39981e02873ee2bacacbabfa176c1ee5e7a6edb3a04cd0'
+            '187c316bb77ed1c824099fe8621a17d14f7de8a6ce5b14a1a04de0ae674b4aa6')
 
 prepare() {
     find "$srcdir" -type f -iname '*windows*' -delete  # the windows compatible fonts are not necessary on linux ;)
