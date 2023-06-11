@@ -20,6 +20,8 @@ package_project0-desktop() {
         'project0-nerd-fonts'
         'project0-sweet-gtk-themes'
 
+        'base-devel'
+
         # xorg/wayland
         'wayland-utils'
         'xorg-font-util' 'xorg-fonts-100dpi' 'xorg-fonts-75dpi' 'xorg-fonts-alias-100dpi' 'xorg-fonts-alias-75dpi' 'xorg-fonts-misc'
@@ -75,11 +77,8 @@ package_project0-desktop() {
         'virtualbox' 'virtualbox-host-dkms' 'vagrant'
 
     )
-    depends+=($(pacman -Sgq base-devel))
     depends+=($(pacman -Sgq xorg-drivers))
-
     _systemd_state cups.service enable
-
     echo 'quiet' | \
         install -Dm0644 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/default/20-${pkgname}-quiet"
 }
