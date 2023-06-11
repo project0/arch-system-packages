@@ -23,3 +23,12 @@ package_project0-host-daedalus() {
     # workaround amd gpu bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1974
     printf 'amdgpu.ppfeaturemask=0xfffd3fff' | install -Dm0644 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/default/50-project0-amdgpu"
 }
+
+
+# Intel NUC
+package_project0-host-finalizer() {
+    depends=(
+        'project0-desktop-gnome' 'project0-refind'
+    )
+    printf 'finalizer' | install -Dm0644 /dev/stdin "${pkgdir}/etc/hostname"
+}
