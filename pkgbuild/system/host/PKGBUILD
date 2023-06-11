@@ -7,21 +7,31 @@ pkgrel="${PKGREL-1}"
 pkgbase='project0-host'
 pkgname=(
         "${pkgbase}-daedalus"
+        "${pkgbase}-finalizer"
 )
 pkgdesc='Project0 package per host'
 arch=('any')
 license=('MIT')
 
-# Traefik - Lenovo T14 Gen 3 AMD
+# Lenovo T14 Gen 3 AMD
+# package_project0-host-daedalus() {
+#     depends=(
+#         'project0-desktop-gnome' 'project0-refind-secureboot' 'project0-cryptsetup'
+#         'vulkan-radeon'
+#     )
+#     printf 'daedalus' | install -Dm0644 /dev/stdin "${pkgdir}/etc/hostname"
+#
+#     # workaround amd gpu bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1974
+#     printf 'amdgpu.ppfeaturemask=0xfffd3fff' | install -Dm0644 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/default/50-project0-amdgpu"
+# }
+
+
+# Flowers - Lenovo T14 Gen 3 Intel
 package_project0-host-daedalus() {
     depends=(
         'project0-desktop-gnome' 'project0-refind-secureboot' 'project0-cryptsetup'
-        'vulkan-radeon'
     )
     printf 'daedalus' | install -Dm0644 /dev/stdin "${pkgdir}/etc/hostname"
-
-    # workaround amd gpu bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1974
-    printf 'amdgpu.ppfeaturemask=0xfffd3fff' | install -Dm0644 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/default/50-project0-amdgpu"
 }
 
 
