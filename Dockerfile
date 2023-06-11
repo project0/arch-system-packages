@@ -1,6 +1,6 @@
-FROM archlinux
+FROM docker.io/archlinux
 
-RUN pacman -Sy --noconfirm git make pacman-contrib sudo binutils openssh && \
+RUN pacman -Syu --noconfirm && pacman -Sy --noconfirm git make pacman-contrib sudo binutils openssh && \
     echo 'Defaults   !authenticate' > /etc/sudoers && \
     echo 'ALL ALL=(ALL) ALL' >> /etc/sudoers && \
     chown -c root:root /etc/sudoers && \
