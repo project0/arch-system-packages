@@ -55,7 +55,7 @@ package_project0-desktop() {
         'wireshark-cli' 'wireshark-qt'
 
         'gopass' 'gopass-jsonapi' 'gopass-summon-provider'
-        'keybase' 'keybase-gui' 'kbfs'
+        # 'keybase' 'keybase-gui' 'kbfs'
 
         'inkscape' 'gimp' 'krita'
 
