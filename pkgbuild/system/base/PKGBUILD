@@ -23,6 +23,7 @@ package_project0-base-packages() {
 
         # kenerl
         'linux' 'linux-firmware' 'amd-ucode' 'intel-ucode' 'mkinitcpio'
+        'sof-firmware' 'usb_modeswitch'
 
         # core
         'sudo' 'openssh' 'gnupg' 'man-db' 'man-pages'

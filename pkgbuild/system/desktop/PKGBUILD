@@ -25,13 +25,11 @@ package_project0-desktop() {
         # xorg/wayland
         'wayland-utils'
         'xorg-font-util' 'xorg-fonts-100dpi' 'xorg-fonts-75dpi' 'xorg-fonts-alias-100dpi' 'xorg-fonts-alias-75dpi' 'xorg-fonts-misc'
+        'xclip' 'xorg-xclipboard'
 
         # video
         'libvdpau' 'libvdpau-va-gl' 'vdpauinfo' 'libva-utils' 'libva-vdpau-driver'
         'gst-libav' 'gstreamer-vaapi'  'gst-plugin-pipewire'
-
-        # intel driver
-        # 'intel-media-driver' 'vulkan-intel' 'libva-intel-driver'
 
         # audio
         'pipewire-docs' 'pipewire-jack' 'wireplumber' # replaces pipewire-media-session

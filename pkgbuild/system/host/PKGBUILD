@@ -30,6 +30,8 @@ license=('MIT')
 package_project0-host-daedalus() {
     depends=(
         'project0-desktop-gnome' 'project0-refind-secureboot' 'project0-cryptsetup'
+        # intel driver
+        'intel-media-driver' 'vulkan-intel' 'libva-intel-driver'
     )
     printf 'daedalus' | install -Dm0644 /dev/stdin "${pkgdir}/etc/hostname"
 }
