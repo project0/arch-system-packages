@@ -1,7 +1,11 @@
 # Maintainer: Richard Hillmann <richie at project0 dot de>
 # https://wiki.archlinux.org/title/Font_package_guidelines
-pkgname=project0-nerd-fonts
-pkgver=2.2.2
+pkgbase='project0-nerd-fonts'
+pkgname=(
+    project0-nerd-fonts
+)
+
+pkgver=3.0.2
 pkgrel=1
 pkgdesc="Collection of patched nerd fonts"
 arch=('any')
@@ -15,27 +19,44 @@ conflicts=(
     nerd-fonts-jetbrains-mono
 )
 
-source=(
-    "${pkgname}-${pkgver}-LICENSE::https://raw.githubusercontent.com/ryanoasis/nerd-fonts/v$pkgver/LICENSE"
-)
+depends=()
+source=()
 
 for s in SourceCodePro FiraCode DroidSansMono JetBrainsMono; do
-    source+=("${pkgname}-${pkgver}-${s}.zip::https://github.com/ryanoasis/nerd-fonts/releases/download/v$pkgver/${s}.zip")
+    source+=("${pkgbase}-${pkgver}-${s}.tar.xz::https://github.com/ryanoasis/nerd-fonts/releases/download/v$pkgver/${s}.tar.xz")
+    font=${s}
+    depends_all+=("${pkgbase}-${s,,}")
+    pkgname+=("${pkgbase}-${s,,}")
+
+    # workaround license naming issue
+    if [[ "$font" == "SourceCodePro" ]]; then
+        font="SauceCodePro"
+    fi
+    # why does this font have a different name?
+    if [[ "$font" == "DroidSansMono" ]]; then
+        font="DroidSans"
+    fi
+    eval "package_project0-nerd-fonts-${s,,}() { _package \"${font}\"; }"
 done
 
-sha256sums=('245b522abb5aba0d8e84898bf6d5e95102620637626106bfd0061189a2370360'
-            'a736448f04c73bdefefc356c024a5d9250ec086a0621c84179fc44587650c731'
-            '20182e6e7c42cf8ab479d83af3200266261ec9bd4e80cdaceb793ecd56c9a398'
-            'b6fef0c6f789d2f317b192588b5d7aab45ab7b237bd163deb4ed18269ad62192'
-            '8b9b6c58081d179ecd50839a6b211dbd24b61e66d87715860129b6138982ee7b')
+# meta package
+package_project0-nerd-fonts() {
+    depends=("${depends_all[@]}")
+    install -d "${pkgdir}/usr/share/licenses/${pkgbase}"
+    install -Dm644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgbase}"
+}
 
 prepare() {
     find "$srcdir" -type f -iname '*windows*' -delete  # the windows compatible fonts are not necessary on linux ;)
 }
 
-package() {
-    install -d ${pkgdir}/usr/share/fonts/TTF
-    install -d ${pkgdir}/usr/share/licenses/${pkgname}
-    install -Dm644 ${srcdir}/*.ttf ${pkgdir}/usr/share/fonts/TTF
-    install -Dm644 ${srcdir}/${pkgname}-${pkgver}-LICENSE ${pkgdir}/usr/share/licenses/${pkgname}
+_package() {
+    font="$1"
+    install -d "${pkgdir}/usr/share/fonts/TTF"
+    install -Dm644 "${srcdir}/${font}"* "${pkgdir}/usr/share/fonts/TTF"
 }
+
+sha256sums=('e2ce1b45d071b2e549ce72d19a2f4e120b6b79f939fa954a40288917a3e2f863'
+            '76c1d691cea44b0cae4d6add56bb3ef52b83cedebb1c5f519b62d068f8586b93'
+            '8a5986ecc93b3835063bd05cf0e8af55e1769f50b002bb2cd70538fee8d3218f'
+            '4991258b7c97071238a7459f0d3bf81a893ae7b0c849dbc47ad52833a8db7f55')
