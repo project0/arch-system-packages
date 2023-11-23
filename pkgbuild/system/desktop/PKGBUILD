@@ -17,7 +17,6 @@ source=()
 package_project0-desktop() {
     depends=(
         'project0-base-config'
-        'project0-nerd-fonts'
         'project0-sweet-gtk-themes'
 
         'base-devel'
@@ -26,6 +25,15 @@ package_project0-desktop() {
         'wayland-utils'
         'xorg-font-util' 'xorg-fonts-100dpi' 'xorg-fonts-75dpi' 'xorg-fonts-alias-100dpi' 'xorg-fonts-alias-75dpi' 'xorg-fonts-misc'
         'xclip' 'xorg-xclipboard'
+
+        # fonts
+        noto-fonts-extra
+        ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono
+        ttf-ubuntu-nerd ttf-ubuntu-mono-nerd
+        ttf-jetbrains-mono-nerd
+        ttf-firacode-nerd
+        ttf-sourcecodepro-nerd
+        otf-droid-nerd
 
         # video
         'libvdpau' 'libvdpau-va-gl' 'vdpauinfo' 'libva-utils' 'libva-vdpau-driver'

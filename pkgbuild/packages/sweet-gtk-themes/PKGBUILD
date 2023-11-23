@@ -10,13 +10,11 @@ conflicts=(
     sweet-gtk-theme
 )
 
-sha256sums=(
-    'SKIP'
-    'SKIP'
-    'SKIP'
-    'SKIP'
-    'SKIP'
-)
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP')
 
 _branches=(
     master

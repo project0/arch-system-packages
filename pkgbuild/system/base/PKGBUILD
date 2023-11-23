@@ -179,8 +179,7 @@ package_project0-base-config() {
         install -Dm0644 /dev/stdin "${pkgdir}/etc/kernel/cmdline.preset.d/10-${pkgname}-nobgrt"
 }
 
-sha256sums=('88fe7381ebf87647f82220c8c951b40d72a2fd7736ffa211f9f9209a254b715b'
-            'b994d30c0be1b96dc93cea7151eba9e52af177dcb954c2c8d546a2b4fa0fbcfe'
+sha256sums=('b994d30c0be1b96dc93cea7151eba9e52af177dcb954c2c8d546a2b4fa0fbcfe'
             'add3a21089978bd76b6c4bd34e3e53403daafeea3c77a66a9092b1dab609cffb'
             '813cc0230b905fb9bade11a5aecee3b85d74d99ebb6242fff81ac5d83f1c8309'
             'de8254d1f27f165d2c59ecb6e706b57b2197b9b0a22e14ba5ea960e123082116'
