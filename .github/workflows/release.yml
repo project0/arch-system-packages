@@ -53,6 +53,10 @@ jobs:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
+      - name: Install packages
+        run: |
+          sudo pacman -Sy --noconfirm base-devel
+
       - name: Build and publish packages
         env:
           GPG_FINGERPRINT: ${{ steps.import_gpg.outputs.fingerprint }}
