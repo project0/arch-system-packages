@@ -1,11 +1,31 @@
 [Trigger]
-Type = Path
+Type = Package
 Operation = Install
 Operation = Upgrade
 
+Target = linux
+Target = linux-lts
+Target = linux-hardened
+Target = linux-zen
+Target = *-ucode
+Target = mkinitcpio
+Target = mkinitcpio-*
+
 # same trigger as 90-mkinitcpio-install.hook
-Target = usr/lib/modules/*/vmlinuz
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Operation = Remove
 Target = usr/lib/initcpio/*
+Target = usr/lib/firmware/*
+Target = usr/src/*/dkms.conf
+
+[Trigger]
+Type = Path
+Operation = Install
+Operation = Upgrade
+Target = usr/lib/modules/*/vmlinuz
 
 [Action]
 Description = Signing kernel with Machine Owner Key for Secure Boot
