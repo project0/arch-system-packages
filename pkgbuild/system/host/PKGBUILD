@@ -48,6 +48,10 @@ package_project0-host-finalizer() {
 
 # Homeserver - VM Host
 package_project0-host-stargazer() {
+    local address="192.168.200.240/24"
+    local gw="192.168.200.1"
+    local ipv6suffix="::240"
+
     depends=(
         'project0-base-config' 'project0-refind'
         'base-devel' 'yay-bin'
@@ -58,4 +62,23 @@ package_project0-host-stargazer() {
         'incus' 'incus-tools'
     )
     printf 'stargazer' | install -Dm0644 /dev/stdin "${pkgdir}/etc/hostname"
+
+    # lxd/incus
+    _systemd_state incus.service enable
+
+    # ssh
+    printf "PermitRootLogin yes\n" \
+        | install -Dm0644 /dev/stdin "${pkgdir}/etc/ssh/sshd_config.d/20-allow-root.conf"
+    _systemd_state sshd.service enable
+
+    # bridged network
+    printf "[NetDev]\nName=br0\nKind=bridge\n\nMACAddress=none\n" \
+        | install -Dm0644 /dev/stdin "${pkgdir}/etc/systemd/network/20-br0.netdev"
+    printf "[Match]\nOriginalName=br0\n[Link]\nMACAddressPolicy=none\n" \
+        | install -Dm0644 /dev/stdin "${pkgdir}/etc/systemd/network/20-br0.link"
+    printf "[Match]\nName=br0\n[Network]\nAddress=%s\nGateway=%s\nConfigureWithoutCarrier=yes\nIPv6Token=%s\n" \
+        "${address}" "${gw}" "${ipv6suffix}" \
+        | install -Dm0644 /dev/stdin "${pkgdir}/etc/systemd/network/20-br0.network"
+    # add phys. ethernet to bridge
+    printf "[Match]\nName=en*\n[Network]\nBridge=br0\n" | install -Dm0644 /dev/stdin "${pkgdir}/etc/systemd/network/20-en.network"
 }
