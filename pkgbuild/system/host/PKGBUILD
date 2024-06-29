@@ -8,6 +8,7 @@ pkgbase='project0-host'
 pkgname=(
         "${pkgbase}-daedalus"
         "${pkgbase}-finalizer"
+        "${pkgbase}-stargazer"
 )
 pkgdesc='Project0 package per host'
 arch=('any')
@@ -43,4 +44,16 @@ package_project0-host-finalizer() {
         'project0-desktop-gnome' 'project0-refind'
     )
     printf 'finalizer' | install -Dm0644 /dev/stdin "${pkgdir}/etc/hostname"
+}
+
+# Homeserver - VM Host
+package_project0-host-stargazer() {
+    depends=(
+        'project0-desktop-gnome' 'project0-refind'
+        # intel driver
+        'intel-media-driver' 'vulkan-intel' 'libva-intel-driver'
+
+        'incus' 'incus-tools'
+    )
+    printf 'stargazer' | install -Dm0644 /dev/stdin "${pkgdir}/etc/hostname"
 }
