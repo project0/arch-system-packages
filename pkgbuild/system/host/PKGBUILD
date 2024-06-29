@@ -49,7 +49,9 @@ package_project0-host-finalizer() {
 # Homeserver - VM Host
 package_project0-host-stargazer() {
     depends=(
-        'project0-desktop-gnome' 'project0-refind'
+        'project0-base-config' 'project0-refind'
+        'base-devel' 'yay-bin'
+
         # intel driver
         'intel-media-driver' 'vulkan-intel' 'libva-intel-driver'
 
