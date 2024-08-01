@@ -1,24 +1,15 @@
-#!/bin/bash
-# Sign boot images
+#!/usr/bin/env bash
+# https://wiki.archlinux.org/title/Unified_kernel_image#Signing_the_UKIs_for_Secure_Boot
+uki="$3"
+[[ -n "$uki" ]] || exit 0
 
-sign_cert=/etc/refind.d/keys/refind_local.crt
-sign_key=/etc/refind.d/keys/refind_local.key
+keypairs=(
+  /etc/refind.d/keys/refind_local.key /etc/refind.d/keys/refind_local.crt
+)
 
-_fatal() {
-  echo "$1"
-  exit 1
-}
-
-[[ ! -f "$sign_key" || ! -f "$sign_cert" ]] && echo "Abort, signing keys are not present ($sign_cert,$sign_key)"
-
-# only sign efistub files, ignore /boot/vmlinuz-*
-# We can only ensure a secure boot as long nobody can inject "malicious" cmdline params or initramfs
-for f in /boot/*.efi; do
-  if [[ -f "$f" ]]; then
-    # not signed yet or outdated
-    if ! /usr/bin/sbverify --cert "$sign_cert" "$f" > /dev/null 2>&1; then
-      echo "Signing $f"
-      /usr/bin/sbsign --key "$sign_key" --cert "$sign_cert" "$f" --output "$f"
+for (( i=0; i<${#keypairs[@]}; i+=2 )); do
+    key="${keypairs[$i]}" cert="${keypairs[(( i + 1 ))]}"
+    if ! sbverify --cert "$cert" "$uki" &>/dev/null; then
+        sbsign --key "$key" --cert "$cert" --output "$uki" "$uki"
     fi
-  fi
 done

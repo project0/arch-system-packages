@@ -24,7 +24,7 @@ package_project0-refind() {
     install -Dm0644 refind.sbat.csv "${pkgdir}/usr/share/refind/refind_x64.csv"
     install -Dm0644 refind.conf "${pkgdir}/etc/refind.conf"
     install -Dm0755 refind.generate.scripts "${pkgdir}/usr/bin/${pkgname}-generate"
-    install -Dm0644 refind.generate.hook "${pkgdir}/usr/share/libalpm/hooks/99-"${pkgname}"-generate.hook"
+    install -Dm0644 refind.generate.hook "${pkgdir}/usr/share/libalpm/hooks/99-${pkgname}-generate.hook"
 }
 
 # https://wiki.archlinux.org/title/Unified_Extensible_Firmware_Interface/Secure_Boot#Signing_the_kernel_with_a_pacman_hook
@@ -40,9 +40,9 @@ package_project0-refind-secureboot() {
     # use refind installer capabilities to generate keys and sign refind itself
     install -Dm0644 refind.secureboot.conf "${pkgdir}/etc/refind.d/20-${pkgname}.conf"
 
-    # hook to sign kernel
-    install -Dm0644 refind.secureboot.sign.hook "${pkgdir}/usr/share/libalpm/hooks/99-"${pkgname}"-sign.hook"
-    install -Dm0755 refind.secureboot.sign.scripts "${pkgdir}/usr/bin/${pkgname}-sign"
+    # post hook to sign kernel
+    # https://gitlab.archlinux.org/archlinux/mkinitcpio/mkinitcpio/-/merge_requests/171
+    install -Dm0755 refind.secureboot.sign.scripts "${pkgdir}/usr/lib/initcpio/post/${pkgname}-sign"
 }
 
 sha256sums=('ed5f0ee0ae242f7a4befa822fd07a6b8f246061ac8bc11e67a2f99f4a89693a6'
@@ -50,5 +50,4 @@ sha256sums=('ed5f0ee0ae242f7a4befa822fd07a6b8f246061ac8bc11e67a2f99f4a89693a6'
             'c1004451c94d89b3fb4e0d40a17b2ae786912dac77a4bdf820c170e6ded976df'
             'eaebd4f763ed1e40f930c2829abcaab58ab7cb18203edf0529fd72d40ca349d7'
             '210acbb0f4f82181172b03cfb89d79a68bc28ea6417031061dfe0a21d7c1dd50'
-            '4c49d7dbdc22779800e5d699cd6ffc2ec657f5d866148daf25205b1deb25f5b7'
-            '2c4b4fd7e26647e9501778b43b117a892cf9b43615d7a6f2df208192736df95b')
+            '81093063868cd15d6baaf6a17b37e2df8c54130189e0c1f4e2c02856cd101b81')
