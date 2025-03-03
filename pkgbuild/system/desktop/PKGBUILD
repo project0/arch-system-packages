@@ -36,7 +36,7 @@ package_project0-desktop() {
         otf-droid-nerd
 
         # video
-        'libvdpau' 'libvdpau-va-gl' 'vdpauinfo' 'libva-utils' 'libva-vdpau-driver'
+        'libvdpau' 'libvdpau-va-gl' 'vdpauinfo' 'libva-utils'
         'gst-libav' 'gstreamer-vaapi'  'gst-plugin-pipewire'
 
         # audio
