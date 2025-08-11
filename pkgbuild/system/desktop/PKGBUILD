@@ -80,7 +80,7 @@ package_project0-desktop() {
         'yay-bin'
 
         'kubectl' 'kubectx' 'kustomize'
-        'virtualbox' 'virtualbox-host-dkms' 'vagrant'
+        'virtualbox' 'virtualbox-host-modules-arch' 'vagrant'
 
     )
     depends+=($(pacman -Sgq xorg-drivers))
