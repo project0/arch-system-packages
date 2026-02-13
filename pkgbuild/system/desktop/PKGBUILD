@@ -128,15 +128,13 @@ package_project0-desktop-gnome() {
         'gnome-bluetooth'
         'arc-gtk-theme'
         'xdg-utils' 'xdg-desktop-portal-gnome' 'xdg-user-dirs-gtk'
-        'gedit' 'baobab' 'cheese'
+        'gedit' 'baobab'
         'eog' 'eog-plugins'
         'evince' 'file-roller'
         'grilo-plugins' 'nautilus' 'sushi' 'totem'
         'dconf-editor'
 
         'arc-gtk-theme'
-
-        'seahorse-nautilus'
 
         'networkmanager' 'networkmanager-openvpn' 'networkmanager-openconnect'
     )
