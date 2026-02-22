@@ -37,7 +37,7 @@ package_project0-desktop() {
 
         # video
         'libvdpau' 'libvdpau-va-gl' 'vdpauinfo' 'libva-utils'
-        'gst-libav' 'gstreamer-vaapi'  'gst-plugin-pipewire'
+        'gst-libav' 'gst-plugin-va'  'gst-plugin-pipewire'
 
         # audio
         'pipewire-docs' 'pipewire-jack' 'wireplumber' # replaces pipewire-media-session
