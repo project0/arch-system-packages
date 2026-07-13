@@ -175,9 +175,8 @@ if [ -z "$SKIP_MOUNT" ]; then
   ### boot partitions
   mkdir -p "$ARCH_INSTALL"/{boot,efi}
   mount "$device_boot" "$ARCH_INSTALL"/boot
-  mount "$device_esp" "$ARCH_INSTALL"/efi
 
   # setup EFI
-  mkdir -p "$ARCH_INSTALL"/efi/EFI "$ARCH_INSTALL"/boot/efi
-  mount --bind "$ARCH_INSTALL"/efi "$ARCH_INSTALL"/boot/efi
+  mount "$device_esp" "$ARCH_INSTALL"/efi
+  mkdir -p "$ARCH_INSTALL"/efi/EFI
 fi
