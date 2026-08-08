@@ -1,6 +1,6 @@
 # Maintainer: Richard Hillmann <richie at project0 dot de>
 pkgname=project0-sweet-gtk-themes
-pkgver=20260210
+pkgver=20260506
 pkgrel=1
 pkgdesc="Sweet themes"
 arch=('any')
@@ -10,11 +10,11 @@ conflicts=(
     sweet-gtk-theme
 )
 
-sha256sums=('c5d57ad73b900185629e590e9cd268d3af485882268baeedaf77cc100303eea9'
-            '3f0a7b1b80b719ef904dbba92c27e55accb5b55cd57612cd4720c63d9ff7a5fe'
-            'a9a78f4876995ee23756e8fd89731bc87f4432ebff22fecd5254ef72595220b5'
-            '53339789f9a705f20f460fb4749dcb770cc588226884ef815db822aefee3a659'
-            'b9c0e4620e6c549676f44ecb7ad2e92fb22f7a1bf0a529d78fa016bf880e938e')
+sha256sums=('6086e339f4123791df03009e674b4cacf42c6d5a696d0444cac21b5bc1b87f2e'
+            '946ccbdb871943af57f18b09c4333b426a85178407ce5af150087bc0ed51f9b2'
+            'dc769157b13c647e798d501e7bfa9b7bbe885af0c3c4b38ab84fa6d466b204bc'
+            '43e26cec5b37c5503717040567f1a08673f4300bc3c68dcc6c1102d6d445f048'
+            '9d1c486e23dcc72313ceff73bebe319b5c095e6f4a141b8b1b347550ea9d1e6a')
 
 _branches=(
     master
@@ -32,11 +32,11 @@ _kinds=(
     Sweet-Ambar-Blue
 )
 _commits=(
-    a5b3c824ec238f398a5b86e042d8fd74f5496244 # master
-    cff8c309d987cfbedddb62330f9df8d829031e46 # mars
-    2c721ad4449ab9e80f4417450270507304ce14c4 # nova
-    b85cd26c87c5d38b3265e4759ceacacf79e03d74 # Ambar
-    0c3d02ce438606719db854697aaea87f13a0272a # Ambar-Blue
+    77a4c3c9dc285bd0efa5ebd59d3372de91c3f274 # master
+    b057b217c826caaf9bea20245d8f1a6ae410cab4 # mars
+    5ce81a45f0f0b63cf732317e7f91f3467ccce084 # nova
+    dd78fc2596e1ba9ab9e3329f205944519f7eca0b # Ambar
+    df37b2fcc62f68046468c660699193be37221f50 # Ambar-Blue
 )
 
 function srcname () {
