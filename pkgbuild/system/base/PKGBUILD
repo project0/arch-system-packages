@@ -34,7 +34,7 @@ package_project0-base-packages() {
         'nvme-cli'
 
         # fs
-        'btrfs-progs' 'xfsprogs' 'e2fsprogs' 'reiserfsprogs'
+        'btrfs-progs' 'xfsprogs' 'e2fsprogs'
         'cifs-utils' 'nfs-utils'
 
         # tops
@@ -42,10 +42,9 @@ package_project0-base-packages() {
         'sysstat' 'lm_sensors'
 
         # networking
-        'bridge-utils'
         'inetutils' 'traceroute' 'bind' 'net-tools' 'ethtool' 'mtr'
         'nmap' 'tcpdump' 'conntrack-tools'
-        'iputils' 'ipcalc'
+        'iputils' 'ipcalc' 'iproute2'
         'iw' 'wpa_supplicant'
         'wireguard-tools'
 
